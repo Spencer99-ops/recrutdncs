@@ -262,6 +262,7 @@
             }
         }
     </style>
+    <script src="js/config.js"></script>
 </head>
 <body>
     <div class="container">
@@ -471,7 +472,7 @@
                     recruteur_id: currentUser.id
                 };
 
-                const response = await fetch('/api/jobs', {
+                const response = await fetch(API_CONFIG.API_URL + 'api/jobs', {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${token}`,

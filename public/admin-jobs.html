@@ -613,6 +613,7 @@
         .job-card:nth-child(4) { animation-delay: 0.4s; }
         .job-card:nth-child(5) { animation-delay: 0.5s; }
     </style>
+    <script src="js/config.js"></script>
 </head>
 <body>
     <div class="admin-container">
@@ -817,7 +818,7 @@
                 
                 try {
                     const token = localStorage.getItem('token');
-                    const response = await fetch('/api/admin/jobs?limit=100', {
+                    const response = await fetch(API_CONFIG.API_URL + 'api/admin/jobs?limit=100', {
                         headers: {
                             'Authorization': `Bearer ${token}`,
                             'Content-Type': 'application/json'

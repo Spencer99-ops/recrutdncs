@@ -520,6 +520,7 @@
             }
         }
     </style>
+    <script src="js/config.js"></script>
 </head>
 <body>
     <div class="register-container">
@@ -870,7 +871,7 @@
             }
             
             try {
-                const response = await fetch('/api/auth/register', {
+                const response = await fetch(API_CONFIG.API_URL + 'api/auth/register', {
                     method: 'POST',
                     body: formData
                 });

@@ -677,6 +677,7 @@
             }
         }
     </style>
+    <script src="js/config.js"></script>
 </head>
 <body>
     <div class="dashboard-container">
@@ -1059,7 +1060,7 @@
 
         // Dashboard pour administrateur
         async function loadAdminDashboard(token) {
-            const response = await fetch('/api/admin/stats', {
+            const response = await fetch(API_CONFIG.API_URL + 'api/admin/stats', {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
@@ -1198,7 +1199,7 @@
             
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch('/api/admin/users', {
+                const response = await fetch(API_CONFIG.API_URL + 'api/admin/users', {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -1368,7 +1369,7 @@
         async function loadRecentUsers() {
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch('/api/admin/users?limit=5', {
+                const response = await fetch(API_CONFIG.API_URL + 'api/admin/users?limit=5', {
                     headers: {
                         'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json'

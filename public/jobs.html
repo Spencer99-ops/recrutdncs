@@ -330,6 +330,7 @@
             }
         }
     </style>
+    <script src="js/config.js"></script>
 </head>
 <body>
     <div class="container">
@@ -584,7 +585,7 @@ Nous offrons un environnement de travail stimulant avec des opportunités de cro
                 const token = localStorage.getItem('token');
                 const user = JSON.parse(localStorage.getItem('user'));
                 
-                const response = await fetch('/api/applications', {
+                const response = await fetch(API_CONFIG.API_URL + 'api/applications', {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -613,7 +614,7 @@ Nous offrons un environnement de travail stimulant avec des opportunités de cro
                 const token = localStorage.getItem('token');
                 const user = JSON.parse(localStorage.getItem('user'));
                 
-                const response = await fetch('/api/candidate/save-job', {
+                const response = await fetch(API_CONFIG.API_URL + 'api/candidate/save-job', {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${token}`,

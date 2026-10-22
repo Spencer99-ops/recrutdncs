@@ -454,6 +454,7 @@
         .stat-card:nth-child(3) { animation-delay: 0.3s; }
         .stat-card:nth-child(4) { animation-delay: 0.4s; }
     </style>
+    <script src="js/config.js"></script>
 </head>
 <body>
     <div class="admin-container">
@@ -700,7 +701,7 @@
             async loadStats() {
                 try {
                     const token = localStorage.getItem('token');
-                    const response = await fetch('/api/admin/stats', {
+                    const response = await fetch(API_CONFIG.API_URL + 'api/admin/stats', {
                         headers: {
                             'Authorization': `Bearer ${token}`,
                             'Content-Type': 'application/json'
@@ -774,10 +775,10 @@
                 try {
                     const token = localStorage.getItem('token');
                     const [usersResponse, applicationsResponse] = await Promise.all([
-                        fetch('/api/admin/users?limit=100', {
+                        fetch(API_CONFIG.API_URL + 'api/admin/users?limit=100', {
                             headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
                         }),
-                        fetch('/api/admin/applications?limit=100', {
+                        fetch(API_CONFIG.API_URL + 'api/admin/applications?limit=100', {
                             headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
                         })
                     ]);
@@ -1076,13 +1077,13 @@
                 try {
                     const token = localStorage.getItem('token');
                     const [usersResponse, jobsResponse, applicationsResponse] = await Promise.all([
-                        fetch('/api/admin/users?limit=5', {
+                        fetch(API_CONFIG.API_URL + 'api/admin/users?limit=5', {
                             headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
                         }),
-                        fetch('/api/admin/jobs?limit=5', {
+                        fetch(API_CONFIG.API_URL + 'api/admin/jobs?limit=5', {
                             headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
                         }),
-                        fetch('/api/admin/applications?limit=5', {
+                        fetch(API_CONFIG.API_URL + 'api/admin/applications?limit=5', {
                             headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
                         })
                     ]);
