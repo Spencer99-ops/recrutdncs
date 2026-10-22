@@ -81,7 +81,7 @@ app.get('/api/users/:id', async (c) => {
   try {
     const userId = c.req.param('id');
     const users = await query(`
-      SELECT id, nom, email, telephone, role, bio, location, created_at, updated_at
+      SELECT id, nom, prenom, email, telephone, role, bio, location, created_at, updated_at
       FROM users
       WHERE id = $1
     `, [userId]);
@@ -276,6 +276,108 @@ app.post('/api/auth/login', async (c) => {
     });
   } catch (error) {
     console.error('Error during login:', error);
+    return c.json({ success: false, message: 'Erreur serveur' }, 500);
+  }
+});
+
+// Admin stats endpoint
+app.get('/api/admin/stats', async (c) => {
+  try {
+    const jwt = require('jsonwebtoken');
+    const authHeader = c.req.header('authorization');
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return c.json({ success: false, message: 'Token d\'authentification manquant' }, 401);
+    }
+    
+    const token = authHeader.split(' ')[1];
+    const JWT_SECRET = process.env.JWT_SECRET || 'your_super_secret_jwt_key_here_change_in_production';
+    
+    const decoded = jwt.verify(token, JWT_SECRET);
+    
+    if (decoded.role !== 'administrateur' && decoded.role !== 'admin') {
+      return c.json({ success: false, message: 'Permission refusée' }, 403);
+    }
+    
+    // Récupérer les statistiques
+    const users = await query('SELECT * FROM users');
+    const jobs = await query('SELECT * FROM jobs');
+    const applications = await query('SELECT * FROM applications');
+    
+    const stats = {
+      users: users,
+      jobs: jobs,
+      applications: applications,
+      totalUsers: users.length,
+      totalJobs: jobs.length,
+      totalApplications: applications.length
+    };
+    
+    return c.json({ success: true, data: stats });
+  } catch (error) {
+    console.error('Error fetching admin stats:', error);
+    return c.json({ success: false, message: 'Erreur serveur' }, 500);
+  }
+});
+
+// Admin users endpoint
+app.get('/api/admin/users', async (c) => {
+  try {
+    const jwt = require('jsonwebtoken');
+    const authHeader = c.req.header('authorization');
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return c.json({ success: false, message: 'Token d\'authentification manquant' }, 401);
+    }
+    
+    const token = authHeader.split(' ')[1];
+    const JWT_SECRET = process.env.JWT_SECRET || 'your_super_secret_jwt_key_here_change_in_production';
+    
+    const decoded = jwt.verify(token, JWT_SECRET);
+    
+    if (decoded.role !== 'administrateur' && decoded.role !== 'admin') {
+      return c.json({ success: false, message: 'Permission refusée' }, 403);
+    }
+    
+    const users = await query(`
+      SELECT id, email, nom, prenom, telephone, role, bio, location, created_at, updated_at
+      FROM users
+      ORDER BY created_at DESC
+    `);
+    
+    return c.json({ success: true, data: users });
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    return c.json({ success: false, message: 'Erreur serveur' }, 500);
+  }
+});
+
+// Admin jobs endpoint
+app.get('/api/admin/jobs', async (c) => {
+  try {
+    const jwt = require('jsonwebtoken');
+    const authHeader = c.req.header('authorization');
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return c.json({ success: false, message: 'Token d\'authentification manquant' }, 401);
+    }
+    
+    const token = authHeader.split(' ')[1];
+    const JWT_SECRET = process.env.JWT_SECRET || 'your_super_secret_jwt_key_here_change_in_production';
+    
+    const decoded = jwt.verify(token, JWT_SECRET);
+    
+    if (decoded.role !== 'administrateur' && decoded.role !== 'admin') {
+      return c.json({ success: false, message: 'Permission refusée' }, 403);
+    }
+    
+    const jobs = await query(`
+      SELECT j.*, u.nom as recruteur_nom, u.email as recruteur_email
+      FROM jobs j
+      LEFT JOIN users u ON j.user_id = u.id
+      ORDER BY j.created_at DESC
+    `);
+    
+    return c.json({ success: true, data: jobs });
+  } catch (error) {
+    console.error('Error fetching jobs:', error);
     return c.json({ success: false, message: 'Erreur serveur' }, 500);
   }
 });
