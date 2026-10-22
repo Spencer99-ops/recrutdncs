@@ -339,11 +339,11 @@
                     
                     if (response.ok && data.message === 'Connexion réussie') {
                         // Sauvegarder le token et les infos utilisateur
-                        localStorage.setItem('token', data.data.token);
-                        localStorage.setItem('user', JSON.stringify(data.data.user));
+                        localStorage.setItem('token', data.token);
+                        localStorage.setItem('user', JSON.stringify(data.user));
                         
                         showSuccess('Connexion réussie ! Redirection...');
-                        console.log('Redirection vers le dashboard pour le rôle:', data.data.user.role);
+                        console.log('Redirection vers le dashboard pour le rôle:', data.user.role);
                         
                         // Rediriger vers le dashboard approprié
                         setTimeout(() => {
@@ -353,7 +353,7 @@
                                 'administrateur': '/dashboard-admin.html'
                             };
                             
-                            const dashboardUrl = dashboards[data.data.user.role] || '/dashboard.html';
+                            const dashboardUrl = dashboards[data.user.role] || '/dashboard.html';
                             console.log('URL de redirection:', dashboardUrl);
                             window.location.href = dashboardUrl;
                         }, 1000);

@@ -759,7 +759,7 @@
                     if (response.ok) {
                         const data = await response.json();
                         if (data.success && data.data) {
-                            this.users = data.data.users;
+                            this.users = data.users;
                             this.filteredUsers = [...this.users];
                             this.renderUsers();
                             this.updateStats();

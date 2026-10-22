@@ -828,7 +828,7 @@
                     if (response.ok) {
                         const data = await response.json();
                         if (data.success && data.data) {
-                            this.jobs = data.data.jobs;
+                            this.jobs = data.jobs;
                             this.filteredJobs = [...this.jobs];
                             this.renderJobs();
                             this.updateStats();

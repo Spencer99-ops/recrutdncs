@@ -660,7 +660,7 @@
                             // Gérer les différentes structures de données selon le rôle
                             if (currentUser.role === 'admin' || currentUser.role === 'administrateur') {
                                 // L'API admin retourne {data: {applications: [...]} }
-                                applications = data.data && data.data.applications ? data.data.applications : [];
+                                applications = data.data && data.applications ? data.applications : [];
                             } else {
                                 // Les autres APIs retournent {data: [...]}
                                 applications = data.data || [];

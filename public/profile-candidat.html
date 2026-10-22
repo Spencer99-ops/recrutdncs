@@ -723,9 +723,9 @@
                 if (response.ok) {
                     const data = await response.json();
                     if (data.success && data.data) {
-                        document.getElementById('applications-count').textContent = data.data.totalApplications || 0;
-                        document.getElementById('views-count').textContent = data.data.profileViews || 0;
-                        document.getElementById('saved-jobs-count').textContent = data.data.savedJobs || 0;
+                        document.getElementById('applications-count').textContent = data.totalApplications || 0;
+                        document.getElementById('views-count').textContent = data.profileViews || 0;
+                        document.getElementById('saved-jobs-count').textContent = data.savedJobs || 0;
                     }
                 }
             } catch (error) {

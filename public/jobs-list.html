@@ -478,8 +478,8 @@
                 if (response.ok) {
                     const data = await response.json();
                     if (data.success && data.data) {
-                        // L'endpoint retourne data.data.jobs, pas data.data directement
-                        allJobs = data.data.jobs || [];
+                        // L'endpoint retourne data.jobs, pas data.data directement
+                        allJobs = data.jobs || [];
                         filteredJobs = [...allJobs];
                         displayJobs();
                     } else {

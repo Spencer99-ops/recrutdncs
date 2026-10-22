@@ -1379,7 +1379,7 @@
                 if (response.ok) {
                     const data = await response.json();
                     if (data.success && data.data) {
-                        updateUsersList(data.data.users);
+                        updateUsersList(data.users);
                     }
                 }
             } catch (error) {

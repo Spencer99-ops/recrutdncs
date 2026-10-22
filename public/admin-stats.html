@@ -713,12 +713,12 @@
                         console.log('Données complètes reçues:', data);
                         if (data.success && data.data) {
                             console.log('data.data:', data.data);
-                            console.log('data.data.users:', data.data.users);
-                            console.log('data.data.applications:', data.data.applications);
+                            console.log('data.users:', data.users);
+                            console.log('data.applications:', data.applications);
                             
                             this.updateStats(data.data);
-                            this.updateRoleDistribution(data.data.users);
-                            this.updateApplicationStatusDistribution(data.data.applications);
+                            this.updateRoleDistribution(data.users);
+                            this.updateApplicationStatusDistribution(data.applications);
                             
                             // Mettre à jour les graphiques avec les données réelles
                             this.updateCharts('month');
