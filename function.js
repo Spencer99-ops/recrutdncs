@@ -24,9 +24,9 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Configuration de Multer pour les uploads
+// Configuration de Multer pour les uploads (désactivé pour Neon Functions, utilise memory storage)
 const upload = multer({
-    dest: process.env.UPLOAD_PATH || './uploads',
+    storage: multer.memoryStorage(),
     limits: {
         fileSize: parseInt(process.env.MAX_FILE_SIZE) || 5 * 1024 * 1024 // 5MB
     },
@@ -63,92 +63,8 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Servir les fichiers statiques (frontend) - AVANT les routes API
-app.use(express.static(path.join(__dirname, 'public')));
-
-// Route spécifique pour la page de test
-app.get('/test-frontend.html', (req, res) => {
-    const filePath = path.join(__dirname, 'public', 'test-frontend.html');
-    if (fs.existsSync(filePath)) {
-        res.sendFile(filePath);
-    } else {
-        res.status(404).json({
-            success: false,
-            message: 'Fichier non trouvé',
-            path: req.originalUrl
-        });
-    }
-});
-
-// Route pour register.html
-app.get('/register.html', (req, res) => {
-    const filePath = path.join(__dirname, 'public', 'register.html');
-    if (fs.existsSync(filePath)) {
-        res.sendFile(filePath);
-    } else {
-        res.status(404).json({
-            success: false,
-            message: 'Fichier non trouvé',
-            path: req.originalUrl
-        });
-    }
-});
-
-// Route pour dashboard.html
-app.get('/dashboard.html', (req, res) => {
-    const filePath = path.join(__dirname, 'public', 'dashboard.html');
-    if (fs.existsSync(filePath)) {
-        res.sendFile(filePath);
-    } else {
-        res.status(404).json({
-            success: false,
-            message: 'Fichier non trouvé',
-            path: req.originalUrl
-        });
-    }
-});
-
-// Route pour jobs.html
-app.get('/jobs.html', (req, res) => {
-    const filePath = path.join(__dirname, 'public', 'jobs.html');
-    if (fs.existsSync(filePath)) {
-        res.sendFile(filePath);
-    } else {
-        res.status(404).json({
-            success: false,
-            message: 'Fichier non trouvé',
-            path: req.originalUrl
-        });
-    }
-});
-
-// Route pour admin.html
-app.get('/admin.html', (req, res) => {
-    const filePath = path.join(__dirname, 'public', 'admin.html');
-    if (fs.existsSync(filePath)) {
-        res.sendFile(filePath);
-    } else {
-        res.status(404).json({
-            success: false,
-            message: 'Fichier non trouvé',
-            path: req.originalUrl
-        });
-    }
-});
-
-// Route pour login.html
-app.get('/login.html', (req, res) => {
-    const filePath = path.join(__dirname, 'public', 'login.html');
-    if (fs.existsSync(filePath)) {
-        res.sendFile(filePath);
-    } else {
-        res.status(404).json({
-            success: false,
-            message: 'Fichier non trouvé',
-            path: req.originalUrl
-        });
-    }
-});
+// Désactiver les fichiers statiques pour Neon Functions (utilisez Vercel/Netlify pour le frontend)
+// app.use(express.static(path.join(__dirname, 'public')));
 
 // Routes API avec multer pour l'inscription
 app.use('/api/auth/register', upload.single('cv'), authRoutes);
