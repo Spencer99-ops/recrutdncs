@@ -4,7 +4,7 @@ export default defineConfig({
   functions: {
     api: {
       name: "RECRUTDNCS API",
-      source: "server.js",
+      source: "index.js",
     },
   },
 });

@@ -26,6 +26,7 @@ const PORT = process.env.PORT || 3000;
 
 // Exporter l'application pour Neon Functions
 module.exports = app;
+module.exports.default = app;
 
 // Configuration de Multer pour les uploads
 const upload = multer({
