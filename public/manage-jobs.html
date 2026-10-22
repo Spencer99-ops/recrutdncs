@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gérer mes offres - RecrutDNCS</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin: 0;
+        }
+
+        .header p {
+            color: #6b7280;
+            margin-top: 0.5rem;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: #f3f4f6;
+            border: none;
+            border-radius: 8px;
+            color: #374151;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: #e5e7eb;
+            transform: translateY(-2px);
+        }
+
+        .filter-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .filter-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .filter-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .filter-controls {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-group label {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .filter-group select,
+        .filter-group input {
+            padding: 0.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 0.875rem;
+        }
+
+        .jobs-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .btn-warning {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #d97706;
+        }
+
+        .jobs-grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .job-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 1.5rem;
+            background: #f9fafb;
+            transition: all 0.3s ease;
+        }
+
+        .job-card:hover {
+            background: #f3f4f6;
+            border-color: #d1d5db;
+        }
+
+        .job-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .job-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin: 0;
+        }
+
+        .job-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .job-status.active {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .job-status.inactive {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .job-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .job-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .job-description {
+            color: #4b5563;
+            font-size: 0.875rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+            max-height: 3rem;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .job-description.expanded {
+            max-height: none;
+        }
+
+        .job-stats {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .stat-value {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+
+        .job-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #6b7280;
+        }
+
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .success {
+            background: #d1fae5;
+            color: #065f46;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6b7280;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 0.875rem;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 1.5rem;
+        }
+
+        .no-jobs {
+            text-align: center;
+            padding: 3rem;
+            color: #6b7280;
+        }
+
+        .no-jobs h3 {
+            margin-bottom: 1rem;
+            color: #374151;
+        }
+
+        .no-jobs p {
+            margin-bottom: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .header {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+
+            .filter-controls {
+                flex-direction: column;
+            }
+
+            .job-header {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .job-stats {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .job-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div>
+                <h1>Gérer mes offres</h1>
+                <p style="color: #6b7280; margin-top: 0.5rem;">Modifiez ou supprimez vos offres d'emploi</p>
+            </div>
+            <a href="dashboard-recruteur.html" class="back-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Retour
+            </a>
+        </div>
+
+        <div class="filter-section">
+            <div class="filter-header">
+                <h2 class="filter-title">Filtrer les offres</h2>
+                <a href="create-job.html" class="btn btn-primary">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="16"></line>
+                        <line x1="8" y1="12" x2="16" y2="12"></line>
+                    </svg>
+                    Créer une offre
+                </a>
+            </div>
+            <div class="filter-controls">
+                <div class="filter-group">
+                    <label for="status-filter">Statut:</label>
+                    <select id="status-filter">
+                        <option value="">Tous</option>
+                        <option value="active">Actives</option>
+                        <option value="inactive">Inactives</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="search-filter">Recherche:</label>
+                    <input type="text" id="search-filter" placeholder="Titre ou entreprise...">
+                </div>
+                <div class="filter-group">
+                    <button class="btn btn-secondary" onclick="applyFilters()">Appliquer</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="jobs-section">
+            <div class="section-header">
+                <h2 class="section-title">Mes offres d'emploi</h2>
+                <div>
+                    <span id="jobs-count" style="color: #6b7280; margin-right: 1rem;">0 offres</span>
+                    <button class="btn btn-secondary" onclick="refreshJobs()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="23 4 23 10 17 10"></polyline>
+                            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                        </svg>
+                        Actualiser
+                    </button>
+                </div>
+            </div>
+            <div class="jobs-grid" id="jobs-grid">
+                <div class="loading">Chargement de vos offres...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal pour modifier une offre -->
+    <div class="modal" id="edit-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Modifier l'offre</h3>
+                <button class="modal-close" onclick="closeEditModal()">&times;</button>
+            </div>
+            <form id="edit-form">
+                <div class="form-group">
+                    <label for="edit-titre">Titre du poste *</label>
+                    <input type="text" id="edit-titre" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-entreprise">Entreprise *</label>
+                    <input type="text" id="edit-entreprise" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-lieu">Lieu *</label>
+                    <input type="text" id="edit-lieu" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-type_contrat">Type de contrat *</label>
+                    <select id="edit-type_contrat" required>
+                        <option value="">Sélectionner...</option>
+                        <option value="CDI">CDI</option>
+                        <option value="CDD">CDD</option>
+                        <option value="Stage">Stage</option>
+                        <option value="Alternance">Alternance</option>
+                        <option value="Freelance">Freelance</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="edit-salaire">Salaire</label>
+                    <input type="text" id="edit-salaire" placeholder="Ex: 35 000-45 000">
+                </div>
+                <div class="form-group">
+                    <label for="edit-description">Description *</label>
+                    <textarea id="edit-description" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="edit-exigences">Exigences</label>
+                    <textarea id="edit-exigences"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        let currentUser = null;
+        let jobs = [];
+        let currentEditingJob = null;
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+        });
+
+        // Vérifier l'authentification
+        function checkAuth() {
+            const token = localStorage.getItem('token');
+            const userStr = localStorage.getItem('user');
+            
+            if (!token || !userStr) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            try {
+                const user = JSON.parse(userStr);
+                currentUser = user;
+                
+                // Mettre à jour les infos utilisateur depuis la base de données
+                updateUserProfile(user);
+                
+                // Vérifier si l'utilisateur est un recruteur
+                if (user.role !== 'recruteur') {
+                    // Rediriger selon le rôle
+                    const dashboards = {
+                        'candidat': 'dashboard-candidat.html',
+                        'administrateur': 'dashboard-admin.html'
+                    };
+                    window.location.href = dashboards[user.role] || 'login.html';
+                    return;
+                }
+                
+                loadJobs();
+            } catch (error) {
+                console.error('Erreur d\'authentification:', error);
+                window.location.href = 'login.html';
+            }
+        }
+
+        // Mettre à jour le profil utilisateur depuis la base de données
+        async function updateUserProfile(user) {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`/api/users/${user.id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success) {
+                        // Mettre à jour les informations utilisateur
+                        currentUser = data.data;
+                        localStorage.setItem('user', JSON.stringify(currentUser));
+                    }
+                }
+            } catch (error) {
+                console.error('Erreur lors de la mise à jour du profil:', error);
+            }
+        }
+
+        // Charger les offres
+        async function loadJobs() {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`/api/jobs/recruiter/${currentUser.id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success) {
+                        jobs = data.data;
+                        displayJobs();
+                    }
+                } else {
+                    console.error('Erreur lors du chargement des offres');
+                    document.getElementById('jobs-grid').innerHTML = 
+                        '<div class="error">Erreur lors du chargement des offres</div>';
+                }
+            } catch (error) {
+                console.error('Erreur lors du chargement des offres:', error);
+                document.getElementById('jobs-grid').innerHTML = 
+                    '<div class="error">Erreur lors du chargement des offres</div>';
+            }
+        }
+
+        // Afficher les offres
+        function displayJobs() {
+            const jobsGrid = document.getElementById('jobs-grid');
+            
+            if (!jobs || jobs.length === 0) {
+                jobsGrid.innerHTML = `
+                    <div class="no-jobs">
+                        <h3>Aucune offre publiée</h3>
+                        <p>Commencez par créer votre première offre d'emploi</p>
+                        <a href="create-job.html" class="btn btn-primary">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="8" x2="12" y2="16"></line>
+                                <line x1="8" y1="12" x2="16" y2="12"></line>
+                            </svg>
+                            Créer une offre
+                        </a>
+                    </div>
+                `;
+                return;
+            }
+
+            jobsGrid.innerHTML = jobs.map(job => `
+                <div class="job-card">
+                    <div class="job-header">
+                        <h3 class="job-title">${job.titre}</h3>
+                        <span class="job-status ${job.status === 'active' ? 'active' : 'inactive'}">
+                            ${job.status === 'active' ? 'Active' : 'Inactive'}
+                        </span>
+                    </div>
+                    <div class="job-meta">
+                        <div class="job-meta-item">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                            </svg>
+                            ${job.entreprise}
+                        </div>
+                        <div class="job-meta-item">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                <circle cx="12" cy="10" r="3"></circle>
+                            </svg>
+                            ${job.lieu}
+                        </div>
+                        <div class="job-meta-item">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                            ${formatDate(job.created_at)}
+                        </div>
+                    </div>
+                    <div class="job-description" id="desc-${job.id}">
+                        ${job.description}
+                    </div>
+                    ${job.description.length > 150 ? `
+                        <button class="btn btn-secondary btn-small" onclick="toggleDescription(${job.id})">
+                            Afficher plus
+                        </button>
+                    ` : ''}
+                    <div class="job-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">${job.applications_count || 0}</div>
+                            <div class="stat-label">Candidatures</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">${job.views_count || 0}</div>
+                            <div class="stat-label">Vues</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">${job.saved_count || 0}</div>
+                            <div class="stat-label">Sauvegardées</div>
+                        </div>
+                    </div>
+                    <div class="job-actions">
+                        <a href="applications.html?job=${job.id}" class="btn btn-primary btn-small">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                            Candidatures
+                        </a>
+                        <button class="btn btn-warning btn-small" onclick="editJob(${job.id})">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                            </svg>
+                            Modifier
+                        </button>
+                        <button class="btn btn-${job.status === 'active' ? 'secondary' : 'success'} btn-small" onclick="toggleJobStatus(${job.id})">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                ${job.status === 'active' ? 
+                                    '<rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line>' :
+                                    '<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>'
+                                }
+                            </svg>
+                            ${job.status === 'active' ? 'Désactiver' : 'Activer'}
+                        </button>
+                        <button class="btn btn-danger btn-small" onclick="deleteJob(${job.id})">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="3 6 5 6 21 6"></polyline>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                            </svg>
+                            Supprimer
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            // Mettre à jour le compteur
+            document.getElementById('jobs-count').textContent = `${jobs.length} offre${jobs.length > 1 ? 's' : ''}`;
+        }
+
+        // Basculer l'affichage de la description
+        function toggleDescription(jobId) {
+            const descElement = document.getElementById(`desc-${jobId}`);
+            descElement.classList.toggle('expanded');
+            
+            const button = event.target;
+            button.textContent = descElement.classList.contains('expanded') ? 'Afficher moins' : 'Afficher plus';
+        }
+
+        // Modifier une offre
+        async function editJob(jobId) {
+            const job = jobs.find(j => j.id === jobId);
+            if (!job) return;
+
+            currentEditingJob = job;
+            
+            // Remplir le formulaire
+            document.getElementById('edit-titre').value = job.titre;
+            document.getElementById('edit-entreprise').value = job.entreprise;
+            document.getElementById('edit-lieu').value = job.lieu;
+            document.getElementById('edit-type_contrat').value = job.type_contrat;
+            document.getElementById('edit-salaire').value = job.salaire || '';
+            document.getElementById('edit-description').value = job.description;
+            document.getElementById('edit-exigences').value = job.exigences || '';
+            
+            // Afficher la modal
+            document.getElementById('edit-modal').classList.add('active');
+        }
+
+        // Fermer la modal d'édition
+        function closeEditModal() {
+            document.getElementById('edit-modal').classList.remove('active');
+            currentEditingJob = null;
+        }
+
+        // Soumettre le formulaire d'édition
+        document.getElementById('edit-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            if (!currentEditingJob) return;
+
+            try {
+                const token = localStorage.getItem('token');
+                const formData = {
+                    titre: document.getElementById('edit-titre').value,
+                    entreprise: document.getElementById('edit-entreprise').value,
+                    lieu: document.getElementById('edit-lieu').value,
+                    type_contrat: document.getElementById('edit-type_contrat').value,
+                    salaire: document.getElementById('edit-salaire').value,
+                    description: document.getElementById('edit-description').value,
+                    exigences: document.getElementById('edit-exigences').value
+                };
+
+                const response = await fetch(`/api/jobs/${currentEditingJob.id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success) {
+                        showMessage('Offre modifiée avec succès', 'success');
+                        closeEditModal();
+                        loadJobs();
+                    } else {
+                        showMessage(data.message || 'Erreur lors de la modification', 'error');
+                    }
+                } else {
+                    showMessage('Erreur lors de la modification', 'error');
+                }
+            } catch (error) {
+                console.error('Erreur lors de la modification:', error);
+                showMessage('Erreur lors de la modification', 'error');
+            }
+        });
+
+        // Basculer le statut d'une offre
+        async function toggleJobStatus(jobId) {
+            const job = jobs.find(j => j.id === jobId);
+            if (!job) return;
+
+            try {
+                const token = localStorage.getItem('token');
+                const newStatus = job.status === 'active' ? 'inactive' : 'active';
+
+                const response = await fetch(`/api/jobs/${jobId}/status`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ status: newStatus })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success) {
+                        showMessage(`Offre ${newStatus === 'active' ? 'activée' : 'désactivée'} avec succès`, 'success');
+                        loadJobs();
+                    } else {
+                        showMessage(data.message || 'Erreur lors du changement de statut', 'error');
+                    }
+                } else {
+                    showMessage('Erreur lors du changement de statut', 'error');
+                }
+            } catch (error) {
+                console.error('Erreur lors du changement de statut:', error);
+                showMessage('Erreur lors du changement de statut', 'error');
+            }
+        }
+
+        // Supprimer une offre
+        async function deleteJob(jobId) {
+            if (!confirm('Êtes-vous sûr de vouloir supprimer cette offre ? Cette action est irréversible.')) {
+                return;
+            }
+
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`/api/jobs/${jobId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success) {
+                        showMessage('Offre supprimée avec succès', 'success');
+                        loadJobs();
+                    } else {
+                        showMessage(data.message || 'Erreur lors de la suppression', 'error');
+                    }
+                } else {
+                    showMessage('Erreur lors de la suppression', 'error');
+                }
+            } catch (error) {
+                console.error('Erreur lors de la suppression:', error);
+                showMessage('Erreur lors de la suppression', 'error');
+            }
+        }
+
+        // Appliquer les filtres
+        function applyFilters() {
+            const statusFilter = document.getElementById('status-filter').value;
+            const searchFilter = document.getElementById('search-filter').value.toLowerCase();
+
+            let filteredJobs = jobs;
+
+            if (statusFilter) {
+                filteredJobs = filteredJobs.filter(job => job.status === statusFilter);
+            }
+
+            if (searchFilter) {
+                filteredJobs = filteredJobs.filter(job => 
+                    job.titre.toLowerCase().includes(searchFilter) ||
+                    job.entreprise.toLowerCase().includes(searchFilter)
+                );
+            }
+
+            // Afficher les offres filtrées
+            const jobsGrid = document.getElementById('jobs-grid');
+            if (filteredJobs.length === 0) {
+                jobsGrid.innerHTML = '<div class="no-jobs"><h3>Aucune offre trouvée</h3><p>Essayez de modifier vos filtres</p></div>';
+            } else {
+                jobs = filteredJobs;
+                displayJobs();
+                jobs = jobs; // Restaurer la liste originale pour le prochain rafraîchissement
+            }
+        }
+
+        // Rafraîchir les offres
+        function refreshJobs() {
+            loadJobs();
+        }
+
+        // Formater la date
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('fr-FR');
+        }
+
+        // Afficher un message
+        function showMessage(message, type = 'info') {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = type;
+            messageDiv.textContent = message;
+            
+            const container = document.querySelector('.container');
+            container.insertBefore(messageDiv, container.firstChild);
+            
+            setTimeout(() => {
+                messageDiv.remove();
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

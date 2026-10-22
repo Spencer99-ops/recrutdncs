@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidatures - RecrutDNCS</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .header h1 {
+            color: #1f2937;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #6b7280;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .filters-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            color: #374151;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 0.75rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .applications-grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .application-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .application-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .application-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .application-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .application-company {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        .application-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .application-status.pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .application-status.accepted {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .application-status.rejected {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .application-status.interview {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .application-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        .application-message {
+            color: #4b5563;
+            font-size: 0.875rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .application-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-warning {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+        }
+
+        .btn-small {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #6b7280;
+        }
+
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .success {
+            background: #d1fae5;
+            color: #065f46;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            max-width: 600px;
+            margin: 5% auto;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6b7280;
+        }
+
+        .profile-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .profile-section h3 {
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+
+        .profile-info {
+            display: grid;
+            gap: 0.5rem;
+        }
+
+        .profile-info p {
+            color: #4b5563;
+        }
+
+        .profile-info strong {
+            color: #1f2937;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filters-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .application-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .application-actions {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div>
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <button id="back-to-dashboard-btn" class="btn btn-secondary" style="display: none;" onclick="goToDashboard()">
+                            <i style="margin-right: 0.5rem;">&larr;</i>
+                            Retour au dashboard
+                        </button>
+                        <h1 id="page-title">Candidatures</h1>
+                    </div>
+                    <p id="page-description" style="color: #6b7280; margin-top: 0.5rem;">Gestion des candidatures</p>
+                </div>
+                <div class="user-info">
+                    <div class="user-avatar" id="user-avatar">U</div>
+                    <div>
+                        <div id="user-name" style="font-weight: 600;">Utilisateur</div>
+                        <div id="user-role" style="font-size: 0.875rem; color: #6b7280;">Rôle</div>
+                    </div>
+                    <button id="logout-btn" class="btn btn-danger btn-small" style="display: none;" onclick="logout()">
+                        <i style="margin-right: 0.25rem;">&times;</i>
+                        Déconnexion
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Statistiques -->
+        <div class="stats-grid" id="stats-grid">
+            <!-- Les statistiques seront insérées ici selon le rôle -->
+        </div>
+
+        <!-- Filtres -->
+        <div class="filters-section">
+            <div class="filters-grid">
+                <div class="form-group">
+                    <label for="search-filter">Recherche</label>
+                    <input type="text" id="search-filter" placeholder="Rechercher...">
+                </div>
+                <div class="form-group">
+                    <label for="status-filter">Statut</label>
+                    <select id="status-filter">
+                        <option value="">Tous les statuts</option>
+                        <option value="en_attente">En attente</option>
+                        <option value="en_revue">En révision</option>
+                        <option value="entretien">Entretien</option>
+                        <option value="accepte">Accepté</option>
+                        <option value="refuse">Refusé</option>
+                    </select>
+                </div>
+                <div class="form-group" id="job-filter-group">
+                    <label for="job-filter">Offre</label>
+                    <select id="job-filter">
+                        <option value="">Toutes les offres</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Liste des candidatures -->
+        <div class="applications-grid" id="applications-grid">
+            <div class="loading">Chargement des candidatures...</div>
+        </div>
+    </div>
+
+    <!-- Modal profil candidat -->
+    <div class="modal" id="candidate-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Profil du candidat</h2>
+                <button class="modal-close" onclick="closeCandidateModal()">&times;</button>
+            </div>
+            <div id="candidate-profile-content">
+                <!-- Le profil sera inséré ici -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal modification candidature -->
+    <div class="modal" id="edit-application-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Modifier la candidature</h2>
+                <button class="modal-close" onclick="closeEditApplicationModal()">&times;</button>
+            </div>
+            <form id="edit-application-form">
+                <div class="form-group">
+                    <label for="edit-status">Statut</label>
+                    <select id="edit-status" required>
+                        <option value="en_attente">En attente</option>
+                        <option value="en_revue">En révision</option>
+                        <option value="entretien">Entretien</option>
+                        <option value="accepte">Accepté</option>
+                        <option value="refuse">Refusé</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="edit-interview-date">Date d'entretien</label>
+                    <input type="datetime-local" id="edit-interview-date">
+                </div>
+                <div class="form-group">
+                    <label for="edit-feedback">Feedback</label>
+                    <textarea id="edit-feedback" rows="3" placeholder="Ajouter un feedback sur la candidature..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="edit-message">Message de motivation</label>
+                    <textarea id="edit-message" rows="4" placeholder="Message de motivation du candidat..." readonly></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeEditApplicationModal()">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Sauvegarder</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        let currentUser = null;
+        let applications = [];
+        let jobs = [];
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+        });
+
+        // Vérifier l'authentification
+        function checkAuth() {
+            const token = localStorage.getItem('token');
+            const userStr = localStorage.getItem('user');
+            
+            if (!token || !userStr) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            try {
+                const user = JSON.parse(userStr);
+                currentUser = user;
+                
+                // Mettre à jour l'interface selon le rôle
+                updateUIForRole(user.role);
+                
+                // Charger les données
+                loadData();
+            } catch (error) {
+                console.error('Erreur lors du parsing de l\'utilisateur:', error);
+                window.location.href = 'login.html';
+            }
+        }
+
+        // Mettre à jour l'interface selon le rôle
+        function updateUIForRole(role) {
+            const pageTitle = document.getElementById('page-title');
+            const pageDescription = document.getElementById('page-description');
+            const userName = document.getElementById('user-name');
+            const userRole = document.getElementById('user-role');
+            const userAvatar = document.getElementById('user-avatar');
+            const jobFilterGroup = document.getElementById('job-filter-group');
+            const backToDashboardBtn = document.getElementById('back-to-dashboard-btn');
+            const logoutBtn = document.getElementById('logout-btn');
+            
+            userName.textContent = currentUser.nom || currentUser.email;
+            userRole.textContent = role.charAt(0).toUpperCase() + role.slice(1);
+            userAvatar.textContent = (currentUser.nom || currentUser.email).charAt(0).toUpperCase();
+            
+            // Afficher le bouton de retour au dashboard pour tous les rôles authentifiés
+            if (role === 'admin' || role === 'administrateur' || role === 'recruteur' || role === 'candidat') {
+                backToDashboardBtn.style.display = 'inline-flex';
+            } else {
+                backToDashboardBtn.style.display = 'none';
+            }
+            
+            // Masquer le bouton de déconnexion pour tous les rôles
+            logoutBtn.style.display = 'none';
+            
+            switch(role) {
+                case 'candidat':
+                    pageTitle.textContent = 'Mes candidatures';
+                    pageDescription.textContent = 'Suivi de mes candidatures envoyées';
+                    jobFilterGroup.style.display = 'none';
+                    break;
+                case 'recruteur':
+                    pageTitle.textContent = 'Candidatures reçues';
+                    pageDescription.textContent = 'Gestion des candidatures pour mes offres';
+                    break;
+                case 'admin':
+                case 'administrateur':
+                    pageTitle.textContent = 'Toutes les candidatures';
+                    pageDescription.textContent = 'Administration de toutes les candidatures';
+                    break;
+            }
+        }
+
+        // Charger les données selon le rôle
+        async function loadData() {
+            try {
+                await Promise.all([
+                    loadApplications(),
+                    currentUser.role === 'recruteur' ? loadJobs() : Promise.resolve()
+                ]);
+                updateStats();
+                displayApplications();
+            } catch (error) {
+                console.error('Erreur lors du chargement des données:', error);
+                showError('Erreur lors du chargement des données');
+            }
+        }
+
+        // Charger les candidatures selon le rôle
+        async function loadApplications() {
+            console.log('=== DEBUG loadApplications() ===');
+            console.log('currentUser:', currentUser);
+            
+            const token = localStorage.getItem('token');
+            console.log('token exists:', !!token);
+            console.log('token length:', token ? token.length : 0);
+            
+            let url = '';
+            
+            switch(currentUser.role) {
+                case 'candidat':
+                    url = `/api/candidate/applications/${currentUser.id}`;
+                    break;
+                case 'recruteur':
+                    url = `/api/applications/recruiter/${currentUser.id}`;
+                    break;
+                case 'admin':
+                case 'administrateur':
+                    url = '/api/admin/applications';
+                    break;
+                default:
+                    console.error('Rôle non reconnu:', currentUser.role);
+                    throw new Error('Rôle non reconnu');
+            }
+            
+            console.log('URL:', url);
+            
+            try {
+                const response = await fetch(url, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                console.log('Response status:', response.status);
+                console.log('Response headers:', Object.fromEntries(response.headers.entries()));
+                
+                if (response.ok) {
+                    const text = await response.text();
+                    console.log('Response text (first 200 chars):', text.substring(0, 200));
+                    
+                    // Vérifier si c'est du HTML
+                    const isHtml = text.includes('<!DOCTYPE') || text.includes('<html');
+                    console.log('Is HTML:', isHtml);
+                    
+                    if (isHtml) {
+                        console.error('ERREUR: L\'API retourne du HTML au lieu de JSON');
+                        throw new Error('L\'API retourne du HTML au lieu de JSON');
+                    }
+                    
+                    try {
+                        const data = JSON.parse(text);
+                        console.log('JSON parsing success:', data.success);
+                        
+                        if (data.success) {
+                            // Gérer les différentes structures de données selon le rôle
+                            if (currentUser.role === 'admin' || currentUser.role === 'administrateur') {
+                                // L'API admin retourne {data: {applications: [...]} }
+                                applications = data.data && data.data.applications ? data.data.applications : [];
+                            } else {
+                                // Les autres APIs retournent {data: [...]}
+                                applications = data.data || [];
+                            }
+                            
+                            console.log('Applications loaded:', applications.length);
+                        } else {
+                            throw new Error(data.message || 'Erreur lors du chargement');
+                        }
+                    } catch (jsonError) {
+                        console.error('JSON parsing error:', jsonError.message);
+                        throw new Error(`JSON parsing error: ${jsonError.message}`);
+                    }
+                } else {
+                    const errorText = await response.text();
+                    console.error('Response error:', errorText);
+                    throw new Error(`Erreur serveur: ${response.status}`);
+                }
+            } catch (fetchError) {
+                console.error('Fetch error:', fetchError);
+                throw fetchError;
+            }
+        }
+
+        // Charger les offres (pour les recruteurs)
+        async function loadJobs() {
+            const token = localStorage.getItem('token');
+            const response = await fetch(`/api/jobs/recruiter/${currentUser.id}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                if (data.success) {
+                    jobs = data.data || [];
+                    populateJobFilter();
+                }
+            }
+        }
+
+        // Remplir le filtre des offres
+        function populateJobFilter() {
+            const jobFilter = document.getElementById('job-filter');
+            jobFilter.innerHTML = '<option value="">Toutes les offres</option>';
+            
+            jobs.forEach(job => {
+                const option = document.createElement('option');
+                option.value = job.id;
+                option.textContent = job.titre;
+                jobFilter.appendChild(option);
+            });
+        }
+
+        // Mettre à jour les statistiques selon le rôle
+        function updateStats() {
+            const statsGrid = document.getElementById('stats-grid');
+            let statsHTML = '';
+            
+            switch(currentUser.role) {
+                case 'candidat':
+                    const sentCount = applications.length;
+                    const pendingCount = applications.filter(app => app.statut === 'en_attente' || app.statut === 'en_revue').length;
+                    const acceptedCount = applications.filter(app => app.statut === 'accepte').length;
+                    
+                    statsHTML = `
+                        <div class="stat-card">
+                            <div class="stat-value">${sentCount}</div>
+                            <div class="stat-label">Candidatures envoyées</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">${pendingCount}</div>
+                            <div class="stat-label">En cours</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">${acceptedCount}</div>
+                            <div class="stat-label">Acceptées</div>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'recruteur':
+                    const totalReceived = applications.length;
+                    const pendingReceived = applications.filter(app => app.statut === 'en_attente' || app.statut === 'en_revue').length;
+                    const interviewCount = applications.filter(app => app.statut === 'entretien').length;
+                    const acceptedReceived = applications.filter(app => app.statut === 'accepte').length;
+                    
+                    statsHTML = `
+                        <div class="stat-card">
+                            <div class="stat-value">${totalReceived}</div>
+                            <div class="stat-label">Candidatures reçues</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">${pendingReceived}</div>
+                            <div class="stat-label">À traiter</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">${interviewCount}</div>
+                            <div class="stat-label">Entretiens</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">${acceptedReceived}</div>
+                            <div class="stat-label">Acceptées</div>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'admin':
+                case 'administrateur':
+                    const totalAdmin = applications.length;
+                    const pendingAdmin = applications.filter(app => app.statut === 'en_attente' || app.statut === 'en_revue').length;
+                    const interviewAdmin = applications.filter(app => app.statut === 'entretien').length;
+                    const acceptedAdmin = applications.filter(app => app.statut === 'accepte').length;
+                    const rejectedAdmin = applications.filter(app => app.statut === 'refuse').length;
+                    
+                    statsHTML = `
+                        <div class="stat-card">
+                            <div class="stat-value">${totalAdmin}</div>
+                            <div class="stat-label">Total candidatures</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">${pendingAdmin}</div>
+                            <div class="stat-label">En attente</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">${interviewAdmin}</div>
+                            <div class="stat-label">Entretiens</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">${acceptedAdmin}</div>
+                            <div class="stat-label">Acceptées</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">${rejectedAdmin}</div>
+                            <div class="stat-label">Refusées</div>
+                        </div>
+                    `;
+                    break;
+            }
+            
+            statsGrid.innerHTML = statsHTML;
+        }
+
+        // Afficher les candidatures
+        function displayApplications() {
+            const applicationsGrid = document.getElementById('applications-grid');
+            
+            if (applications.length === 0) {
+                applicationsGrid.innerHTML = '<div class="loading">Aucune candidature trouvée</div>';
+                return;
+            }
+            
+            applicationsGrid.innerHTML = applications.map(application => `
+                <div class="application-card">
+                    <div class="application-header">
+                        <div>
+                            <div class="application-title">${application.job_titre || application.titre}</div>
+                            <div class="application-company">${application.job_entreprise || application.entreprise}</div>
+                        </div>
+                        <span class="application-status ${getStatusClass(application.statut)}">
+                            ${getStatusText(application.statut)}
+                        </span>
+                    </div>
+                    <div class="application-meta">
+                        <div>Candidat: ${application.candidate_nom || application.nom}</div>
+                        <div>Date: ${formatDate(application.created_at)}</div>
+                    </div>
+                    <div class="application-message">
+                        ${application.message_motivation || 'Aucun message de motivation'}
+                    </div>
+                    <div class="application-actions">
+                        ${getApplicationActions(application)}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Obtenir les actions selon le rôle et le statut
+        function getApplicationActions(application) {
+            switch(currentUser.role) {
+                case 'candidat':
+                    return `
+                        <button class="btn btn-primary btn-small" onclick="viewJobDetails(${application.job_id})">
+                            Voir l'offre
+                        </button>
+                        <button class="btn btn-secondary btn-small" onclick="withdrawApplication(${application.id})">
+                            Retirer
+                        </button>
+                    `;
+                    
+                case 'recruteur':
+                    let actions = `
+                        <button class="btn btn-primary btn-small" onclick="viewCandidateProfile(${application.user_id})">
+                            Voir le profil
+                        </button>
+                    `;
+                    
+                    if (application.statut === 'en_attente' || application.statut === 'en_revue') {
+                        actions += `
+                            <button class="btn btn-warning btn-small" onclick="updateApplicationStatus(${application.id}, 'entretien')">
+                                Proposer entretien
+                            </button>
+                        `;
+                    }
+                    
+                    if (application.statut === 'entretien') {
+                        actions += `
+                            <button class="btn btn-success btn-small" onclick="updateApplicationStatus(${application.id}, 'accepte')">
+                                Accepter
+                            </button>
+                        `;
+                    }
+                    
+                    actions += `
+                        <button class="btn btn-danger btn-small" onclick="updateApplicationStatus(${application.id}, 'refuse')">
+                            Rejeter
+                        </button>
+                    `;
+                    
+                    return actions;
+                    
+                case 'admin':
+                case 'administrateur':
+                    return `
+                        <button class="btn btn-primary btn-small" onclick="viewCandidateProfile(${application.user_id})">
+                            Voir le profil
+                        </button>
+                        <button class="btn btn-warning btn-small" onclick="editApplication(${application.id})">
+                            Modifier
+                        </button>
+                        <button class="btn btn-danger btn-small" onclick="deleteApplication(${application.id})">
+                            Supprimer
+                        </button>
+                    `;
+                    
+                default:
+                    return '';
+            }
+        }
+
+        // Obtenir le texte du statut
+        function getStatusText(status) {
+            const statusTexts = {
+                'en_attente': 'En attente',
+                'en_revue': 'En révision',
+                'entretien': 'Entretien',
+                'accepte': 'Accepté',
+                'refuse': 'Refusé',
+                'pending': 'En attente',
+                'interview': 'Entretien',
+                'accepted': 'Accepté',
+                'rejected': 'Refusé'
+            };
+            return statusTexts[status] || status;
+        }
+
+        // Obtenir la classe CSS du statut
+        function getStatusClass(status) {
+            const statusClasses = {
+                'en_attente': 'pending',
+                'en_revue': 'pending',
+                'entretien': 'interview',
+                'accepte': 'accepted',
+                'refuse': 'rejected',
+                'pending': 'pending',
+                'interview': 'interview',
+                'accepted': 'accepted',
+                'rejected': 'rejected'
+            };
+            return statusClasses[status] || 'pending';
+        }
+
+        // Formater la date
+        function formatDate(dateString) {
+            if (!dateString) return 'Date non disponible';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('fr-FR');
+        }
+
+        // Mettre à jour le statut d'une candidature
+        async function updateApplicationStatus(applicationId, newStatus) {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`/api/applications/${applicationId}/status`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ statut: newStatus })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success) {
+                        showMessage(`Statut mis à jour: ${getStatusText(newStatus)}`, 'success');
+                        await loadApplications();
+                        updateStats();
+                        displayApplications();
+                    } else {
+                        showMessage(data.message || 'Erreur lors de la mise à jour', 'error');
+                    }
+                } else {
+                    showMessage('Erreur serveur', 'error');
+                }
+            } catch (error) {
+                console.error('Erreur lors de la mise à jour:', error);
+                showMessage('Erreur lors de la mise à jour', 'error');
+            }
+        }
+
+        // Voir le profil du candidat
+        async function viewCandidateProfile(candidateId) {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`/api/users/${candidateId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success) {
+                        displayCandidateProfile(data.data);
+                        document.getElementById('candidate-modal').style.display = 'block';
+                    } else {
+                        showMessage('Profil non trouvé', 'error');
+                    }
+                } else {
+                    showMessage('Erreur lors du chargement du profil', 'error');
+                }
+            } catch (error) {
+                console.error('Erreur lors du chargement du profil:', error);
+                showMessage('Erreur lors du chargement du profil', 'error');
+            }
+        }
+
+        // Afficher le profil du candidat
+        function displayCandidateProfile(profile) {
+            const content = document.getElementById('candidate-profile-content');
+            content.innerHTML = `
+                <div class="profile-section">
+                    <h3>Informations personnelles</h3>
+                    <div class="profile-info">
+                        <p><strong>Nom:</strong> ${profile.nom} ${profile.prenom || ''}</p>
+                        <p><strong>Email:</strong> ${profile.email}</p>
+                        <p><strong>Téléphone:</strong> ${profile.telephone || 'Non renseigné'}</p>
+                        <p><strong>Localisation:</strong> ${profile.location || 'Non renseigné'}</p>
+                    </div>
+                </div>
+                <div class="profile-section">
+                    <h3>Professionnel</h3>
+                    <div class="profile-info">
+                        <p><strong>Poste:</strong> ${profile.job_title || 'Non renseigné'}</p>
+                        <p><strong>Expérience:</strong> ${profile.experience || 'Non renseigné'}</p>
+                        <p><strong>Compétences:</strong> ${profile.skills || 'Non renseigné'}</p>
+                        <p><strong>Bio:</strong> ${profile.bio || 'Non renseigné'}</p>
+                    </div>
+                </div>
+                ${profile.cv_path ? `
+                <div class="profile-section">
+                    <h3>Documents</h3>
+                    <div class="profile-info">
+                        <p><strong>CV:</strong> <a href="${profile.cv_path}" target="_blank">Voir le CV</a></p>
+                    </div>
+                </div>
+                ` : ''}
+            `;
+        }
+
+        // Fermer le modal du profil
+        function closeCandidateModal() {
+            document.getElementById('candidate-modal').style.display = 'none';
+        }
+
+        // Supprimer une candidature (admin)
+        async function deleteApplication(applicationId) {
+            if (!confirm('Êtes-vous sûr de vouloir supprimer cette candidature ?')) {
+                return;
+            }
+            
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`/api/applications/${applicationId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    showMessage('Candidature supprimée avec succès', 'success');
+                    await loadApplications();
+                    updateStats();
+                    displayApplications();
+                } else {
+                    showMessage('Erreur lors de la suppression', 'error');
+                }
+            } catch (error) {
+                console.error('Erreur lors de la suppression:', error);
+                showMessage('Erreur lors de la suppression', 'error');
+            }
+        }
+
+        // Retirer une candidature (candidat)
+        async function withdrawApplication(applicationId) {
+            if (!confirm('Êtes-vous sûr de vouloir retirer cette candidature ?')) {
+                return;
+            }
+            
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`/api/applications/${applicationId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    showMessage('Candidature retirée avec succès', 'success');
+                    await loadApplications();
+                    updateStats();
+                    displayApplications();
+                } else {
+                    showMessage('Erreur lors du retrait', 'error');
+                }
+            } catch (error) {
+                console.error('Erreur lors du retrait:', error);
+                showMessage('Erreur lors du retrait', 'error');
+            }
+        }
+
+        // Voir les détails d'une offre
+        function viewJobDetails(jobId) {
+            window.location.href = `jobs.html?id=${jobId}`;
+        }
+
+        // Modifier une candidature (admin)
+        let currentEditingApplication = null;
+
+        function editApplication(applicationId) {
+            const application = applications.find(app => app.id === applicationId);
+            if (!application) {
+                showMessage('Candidature non trouvée', 'error');
+                return;
+            }
+
+            currentEditingApplication = application;
+
+            // Remplir le formulaire avec les données actuelles
+            document.getElementById('edit-status').value = application.statut || 'en_attente';
+            document.getElementById('edit-interview-date').value = application.interview_date ? 
+                new Date(application.interview_date).toISOString().slice(0, 16) : '';
+            document.getElementById('edit-feedback').value = application.feedback || '';
+            document.getElementById('edit-message').value = application.message_motivation || '';
+
+            // Afficher le modal
+            document.getElementById('edit-application-modal').style.display = 'block';
+        }
+
+        // Fermer le modal de modification
+        function closeEditApplicationModal() {
+            document.getElementById('edit-application-modal').style.display = 'none';
+            currentEditingApplication = null;
+        }
+
+        // Gérer la soumission du formulaire de modification
+        document.addEventListener('DOMContentLoaded', function() {
+            const editForm = document.getElementById('edit-application-form');
+            if (editForm) {
+                editForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    
+                    if (!currentEditingApplication) {
+                        showMessage('Aucune candidature à modifier', 'error');
+                        return;
+                    }
+
+                    try {
+                        const token = localStorage.getItem('token');
+                        const newStatus = document.getElementById('edit-status').value;
+                        const interviewDate = document.getElementById('edit-interview-date').value;
+                        const feedback = document.getElementById('edit-feedback').value;
+
+                        const updateData = {
+                            statut: newStatus
+                        };
+
+                        // Ajouter les champs optionnels s'ils sont remplis
+                        if (interviewDate) {
+                            updateData.interview_date = interviewDate;
+                        }
+                        if (feedback) {
+                            updateData.feedback = feedback;
+                        }
+
+                        const response = await fetch(`/api/applications/${currentEditingApplication.id}`, {
+                            method: 'PUT',
+                            headers: {
+                                'Authorization': `Bearer ${token}`,
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(updateData)
+                        });
+
+                        if (response.ok) {
+                            const data = await response.json();
+                            if (data.success) {
+                                showMessage('Candidature modifiée avec succès', 'success');
+                                closeEditApplicationModal();
+                                // Recharger les données
+                                await loadData();
+                            } else {
+                                showMessage(data.message || 'Erreur lors de la modification', 'error');
+                            }
+                        } else {
+                            const errorText = await response.text();
+                            showMessage('Erreur serveur lors de la modification', 'error');
+                        }
+                    } catch (error) {
+                        console.error('Erreur lors de la modification:', error);
+                        showMessage('Erreur lors de la modification', 'error');
+                    }
+                });
+            }
+        });
+
+        // Retourner au dashboard selon le rôle
+        function goToDashboard() {
+            if (currentUser.role === 'admin' || currentUser.role === 'administrateur') {
+                window.location.href = 'dashboard-admin.html';
+            } else if (currentUser.role === 'recruteur') {
+                window.location.href = 'dashboard-recruteur.html';
+            } else if (currentUser.role === 'candidat') {
+                window.location.href = 'dashboard-candidat.html';
+            } else {
+                window.location.href = 'login.html';
+            }
+        }
+
+        // Déconnexion
+        function logout() {
+            // Supprimer le token du localStorage
+            localStorage.removeItem('token');
+            
+            // Réinitialiser les variables globales
+            currentUser = null;
+            applications = [];
+            jobs = [];
+            
+            // Afficher un message de confirmation
+            showMessage('Déconnexion réussie', 'success');
+            
+            // Rediriger vers la page de login après un court délai
+            setTimeout(() => {
+                window.location.href = 'login.html';
+            }, 1000);
+        }
+
+        // Afficher un message
+        function showMessage(message, type) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = type;
+            messageDiv.textContent = message;
+            
+            const container = document.querySelector('.container');
+            container.insertBefore(messageDiv, container.firstChild);
+            
+            setTimeout(() => {
+                messageDiv.remove();
+            }, 5000);
+        }
+
+        // Appliquer les filtres
+        function applyFilters() {
+            const searchFilter = document.getElementById('search-filter').value.toLowerCase();
+            const statusFilter = document.getElementById('status-filter').value;
+            const jobFilter = document.getElementById('job-filter').value;
+            
+            let filteredApplications = applications;
+            
+            if (searchFilter) {
+                filteredApplications = filteredApplications.filter(app => 
+                    (app.job_titre && app.job_titre.toLowerCase().includes(searchFilter)) ||
+                    (app.candidate_nom && app.candidate_nom.toLowerCase().includes(searchFilter)) ||
+                    (app.job_entreprise && app.job_entreprise.toLowerCase().includes(searchFilter))
+                );
+            }
+            
+            if (statusFilter) {
+                filteredApplications = filteredApplications.filter(app => app.statut === statusFilter);
+            }
+            
+            if (jobFilter) {
+                filteredApplications = filteredApplications.filter(app => app.job_id == jobFilter);
+            }
+            
+            // Afficher les candidatures filtrées
+            const applicationsGrid = document.getElementById('applications-grid');
+            
+            if (filteredApplications.length === 0) {
+                applicationsGrid.innerHTML = '<div class="loading">Aucune candidature trouvée avec ces filtres</div>';
+                return;
+            }
+            
+            applicationsGrid.innerHTML = filteredApplications.map(application => `
+                <div class="application-card">
+                    <div class="application-header">
+                        <div>
+                            <div class="application-title">${application.job_titre || application.titre}</div>
+                            <div class="application-company">${application.job_entreprise || application.entreprise}</div>
+                        </div>
+                        <span class="application-status ${getStatusClass(application.statut)}">
+                            ${getStatusText(application.statut)}
+                        </span>
+                    </div>
+                    <div class="application-meta">
+                        <div>Candidat: ${application.candidate_nom || application.nom}</div>
+                        <div>Date: ${formatDate(application.created_at)}</div>
+                    </div>
+                    <div class="application-message">
+                        ${application.message_motivation || 'Aucun message de motivation'}
+                    </div>
+                    <div class="application-actions">
+                        ${getApplicationActions(application)}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Écouteurs d'événements pour les filtres
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('search-filter').addEventListener('input', applyFilters);
+            document.getElementById('status-filter').addEventListener('change', applyFilters);
+            document.getElementById('job-filter').addEventListener('change', applyFilters);
+        });
+
+        // Fonctions utilitaires
+        function showError(message) {
+            showMessage(message, 'error');
+        }
+
+        function showSuccess(message) {
+            showMessage(message, 'success');
+        }
+    </script>
+</body>
+</html>

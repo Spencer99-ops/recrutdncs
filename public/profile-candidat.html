@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Profil - RecrutDNCS</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin: 0;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+        }
+
+        .profile-sidebar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            height: fit-content;
+        }
+
+        .profile-avatar-section {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 3rem;
+            margin: 0 auto 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin: 0 0 0.5rem 0;
+        }
+
+        .profile-role {
+            color: #6b7280;
+            margin: 0 0 1rem 0;
+        }
+
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            background: #f9fafb;
+            border-radius: 8px;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin: 0 0 0.25rem 0;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin: 0;
+        }
+
+        .profile-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #374151;
+            border: 1px solid #e5e7eb;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+
+        .profile-main {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .tab-btn {
+            padding: 1rem 1.5rem;
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            font-weight: 600;
+            color: #6b7280;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            color: #3b82f6;
+            border-bottom-color: #3b82f6;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+        }
+
+        .form-section h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin: 0 0 1rem 0;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: #374151;
+            font-size: 0.9rem;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            padding: 0.75rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            padding-top: 2rem;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .cv-upload {
+            border: 2px dashed #e5e7eb;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .cv-upload:hover {
+            border-color: #3b82f6;
+            background: #f9fafb;
+        }
+
+        .cv-upload.has-file {
+            border-color: #10b981;
+            background: #f0fdf4;
+        }
+
+        .skills-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .skill-tag {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .skill-tag button {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 0;
+            font-size: 1rem;
+            line-height: 1;
+        }
+
+        .add-skill {
+            background: #f3f4f6;
+            color: #374151;
+            border: 1px solid #e5e7eb;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .add-skill:hover {
+            background: #e5e7eb;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: #6b7280;
+        }
+
+        .message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            z-index: 2000;
+            animation: slideIn 0.3s ease;
+        }
+
+        .message-success {
+            background: #10b981;
+        }
+
+        .message-error {
+            background: #ef4444;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .profile-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div>
+                <h1>Mon Profil</h1>
+                <p style="color: #6b7280; margin-top: 0.5rem;">Gérez vos informations personnelles et professionnelles</p>
+            </div>
+            <a href="dashboard-candidat.html" class="back-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Retour
+            </a>
+        </div>
+
+        <div class="profile-grid">
+            <div class="profile-sidebar">
+                <div class="profile-avatar-section">
+                    <div class="profile-avatar" id="profile-avatar">C</div>
+                    <h2 class="profile-name" id="profile-name">Candidat</h2>
+                    <p class="profile-role" id="profile-role">Candidat</p>
+                </div>
+
+                <div class="profile-stats">
+                    <div class="stat-item">
+                        <div class="stat-value" id="applications-count">0</div>
+                        <p class="stat-label">Candidatures</p>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="views-count">0</div>
+                        <p class="stat-label">Vues profil</p>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="saved-jobs-count">0</div>
+                        <p class="stat-label">Offres sauvegardées</p>
+                    </div>
+                </div>
+
+                <div class="profile-actions">
+                    <button class="btn btn-primary" onclick="saveProfile()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                            <polyline points="17,21 17,13 7,13 7,21"/>
+                            <polyline points="7,3 7,8 15,8"/>
+                        </svg>
+                        Enregistrer
+                    </button>
+                    <button class="btn btn-secondary" onclick="resetForm()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                            <path d="M3 3v5h5"/>
+                            <path d="M20.93 11.08A9 9 0 1 1 12 3.07"/>
+                        </svg>
+                        Réinitialiser
+                    </button>
+                </div>
+            </div>
+
+            <div class="profile-main">
+                <div class="profile-tabs">
+                    <button class="tab-btn active" onclick="switchTab('personal')">Informations personnelles</button>
+                    <button class="tab-btn" onclick="switchTab('professional')">Expérience</button>
+                    <button class="tab-btn" onclick="switchTab('education')">Formation</button>
+                    <button class="tab-btn" onclick="switchTab('skills')">Compétences</button>
+                </div>
+
+                <div id="personal-tab" class="tab-content active">
+                    <form id="personal-form">
+                        <div class="form-section">
+                            <h3>Informations de base</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="nom">Nom *</label>
+                                    <input type="text" id="nom" name="nom" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email *</label>
+                                    <input type="email" id="email" name="email" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="telephone">Téléphone</label>
+                                    <input type="tel" id="telephone" name="telephone">
+                                </div>
+                                                                <div class="form-group">
+                                    <label for="adresse">Adresse</label>
+                                    <input type="text" id="adresse" name="adresse">
+                                </div>
+                                <div class="form-group">
+                                    <label for="ville">Ville</label>
+                                    <input type="text" id="ville" name="ville">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>Présentation</h3>
+                            <div class="form-group">
+                                <label for="bio">Biographie</label>
+                                <textarea id="bio" name="bio" placeholder="Parlez brièvement de vous..."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" onclick="resetForm()">Annuler</button>
+                            <button type="submit" class="btn btn-primary">Enregistrer</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="professional-tab" class="tab-content">
+                    <form id="professional-form">
+                        <div class="form-section">
+                            <h3>Expérience professionnelle</h3>
+                            <div id="experience-list">
+                                <!-- Les expériences seront ajoutées dynamiquement -->
+                            </div>
+                            <button type="button" class="btn btn-secondary" onclick="addExperience()">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                </svg>
+                                Ajouter une expérience
+                            </button>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" onclick="resetForm()">Annuler</button>
+                            <button type="submit" class="btn btn-primary">Enregistrer</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="education-tab" class="tab-content">
+                    <form id="education-form">
+                        <div class="form-section">
+                            <h3>Formation</h3>
+                            <div id="education-list">
+                                <!-- Les formations seront ajoutées dynamiquement -->
+                            </div>
+                            <button type="button" class="btn btn-secondary" onclick="addEducation()">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                </svg>
+                                Ajouter une formation
+                            </button>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" onclick="resetForm()">Annuler</button>
+                            <button type="submit" class="btn btn-primary">Enregistrer</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="skills-tab" class="tab-content">
+                    <form id="skills-form">
+                        <div class="form-section">
+                            <h3>Compétences techniques</h3>
+                            <div class="form-group">
+                                <label>Ajouter une compétence</label>
+                                <div style="display: flex; gap: 1rem;">
+                                    <input type="text" id="new-skill" placeholder="Ex: JavaScript, React, Node.js...">
+                                    <button type="button" class="btn btn-primary" onclick="addSkill()">Ajouter</button>
+                                </div>
+                            </div>
+                            <div class="skills-tags" id="skills-list">
+                                <!-- Les compétences seront ajoutées dynamiquement -->
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>CV</h3>
+                            <div class="cv-upload" id="cv-upload">
+                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                    <polyline points="14,2 14,8 20,8"/>
+                                    <line x1="16" y1="13" x2="8" y2="13"/>
+                                    <line x1="16" y1="17" x2="8" y2="17"/>
+                                </svg>
+                                <input type="file" id="cv-input" accept=".pdf,.doc,.docx" style="display: none;">
+                                <p onclick="document.getElementById('cv-input').click()" style="cursor: pointer; color: #3b82f6;">Cliquez pour télécharger votre CV</p>
+                                <p style="font-size: 0.875rem; color: #6b7280; margin-top: 0.5rem;">PDF, DOC, DOCX (Max 5MB)</p>
+                                <div id="cv-filename" style="margin-top: 0.5rem; font-size: 0.875rem; color: #10b981;"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" onclick="resetForm()">Annuler</button>
+                            <button type="submit" class="btn btn-primary">Enregistrer</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        let currentUser = null;
+        let currentTab = 'personal';
+        let skills = [];
+        let experiences = [];
+        let education = [];
+
+        // Vérifier l'authentification
+        function checkAuth() {
+            const token = localStorage.getItem('token');
+            const userStr = localStorage.getItem('user');
+            
+            if (!token || !userStr) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            try {
+                const user = JSON.parse(userStr);
+                if (user.role !== 'candidat') {
+                    const dashboards = {
+                        'recruteur': 'dashboard-recruteur.html',
+                        'administrateur': 'dashboard-admin.html'
+                    };
+                    window.location.href = dashboards[user.role] || 'login.html';
+                    return;
+                }
+                currentUser = user;
+            } catch (error) {
+                console.error('Erreur lors de la lecture des données utilisateur:', error);
+                logout();
+            }
+        }
+
+        // Déconnexion
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = 'login.html';
+        }
+
+        // Charger le profil depuis la base de données
+        async function loadProfile() {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`/api/profile/${currentUser.id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success && data.data) {
+                        displayProfile(data.data);
+                    } else {
+                        throw new Error('Données invalides');
+                    }
+                } else {
+                    throw new Error('Erreur serveur');
+                }
+            } catch (error) {
+                console.error('Erreur lors du chargement du profil:', error);
+                showMessage('Erreur lors du chargement du profil: ' + error.message, 'error');
+                // Utiliser les données stockées en cas d'erreur
+                displayProfile(currentUser);
+            }
+        }
+
+        // Afficher le profil
+        function displayProfile(profile) {
+            // Mettre à jour les informations de base
+            document.getElementById('profile-name').textContent = profile.nom || 'Candidat';
+            document.getElementById('profile-role').textContent = profile.role || 'Candidat';
+            document.getElementById('profile-avatar').textContent = (profile.nom || 'C')[0].toUpperCase();
+            
+            // Remplir le formulaire personnel
+            document.getElementById('nom').value = profile.nom || '';
+            document.getElementById('email').value = profile.email || '';
+            document.getElementById('telephone').value = profile.telephone || '';
+                        document.getElementById('adresse').value = profile.adresse || '';
+            document.getElementById('ville').value = profile.ville || '';
+            document.getElementById('bio').value = profile.bio || '';
+            
+            // Charger les compétences
+            if (profile.skills) {
+                skills = profile.skills;
+                displaySkills();
+            }
+            
+            // Charger les statistiques
+            loadProfileStats();
+        }
+
+        // Charger les statistiques du profil
+        async function loadProfileStats() {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`/api/candidate/stats/${currentUser.id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success && data.data) {
+                        document.getElementById('applications-count').textContent = data.data.totalApplications || 0;
+                        document.getElementById('views-count').textContent = data.data.profileViews || 0;
+                        document.getElementById('saved-jobs-count').textContent = data.data.savedJobs || 0;
+                    }
+                }
+            } catch (error) {
+                console.error('Erreur lors du chargement des statistiques:', error);
+            }
+        }
+
+        // Changer d'onglet
+        function switchTab(tabName) {
+            // Masquer tous les onglets
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Afficher l'onglet sélectionné
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+            event.target.classList.add('active');
+            currentTab = tabName;
+        }
+
+        // Ajouter une compétence
+        function addSkill() {
+            const skillInput = document.getElementById('new-skill');
+            const skill = skillInput.value.trim();
+            
+            if (skill && !skills.includes(skill)) {
+                skills.push(skill);
+                displaySkills();
+                skillInput.value = '';
+            }
+        }
+
+        // Afficher les compétences
+        function displaySkills() {
+            const skillsList = document.getElementById('skills-list');
+            skillsList.innerHTML = skills.map(skill => `
+                <span class="skill-tag">
+                    ${skill}
+                    <button type="button" onclick="removeSkill('${skill}')">×</button>
+                </span>
+            `).join('');
+        }
+
+        // Supprimer une compétence
+        function removeSkill(skill) {
+            skills = skills.filter(s => s !== skill);
+            displaySkills();
+        }
+
+        // Variables pour stocker les expériences et formations
+        let experiencesList = [];
+        let educationList = [];
+
+        // Ajouter une expérience
+        function addExperience() {
+            const experienceList = document.getElementById('experience-list');
+            const experienceId = Date.now();
+            
+            const experienceHTML = `
+                <div class="experience-item" id="experience-${experienceId}">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Poste</label>
+                            <input type="text" name="poste" placeholder="Ex: Développeur Web">
+                        </div>
+                        <div class="form-group">
+                            <label>Entreprise</label>
+                            <input type="text" name="entreprise" placeholder="Ex: Tech Company">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Date de début</label>
+                            <input type="month" name="date_debut">
+                        </div>
+                        <div class="form-group">
+                            <label>Date de fin</label>
+                            <input type="month" name="date_fin">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea name="description" rows="3" placeholder="Description de vos missions..."></textarea>
+                    </div>
+                    <button type="button" class="btn btn-danger" onclick="removeExperience(${experienceId})">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                        Supprimer
+                    </button>
+                </div>
+            `;
+            
+            experienceList.insertAdjacentHTML('beforeend', experienceHTML);
+            experiencesList.push({ id: experienceId });
+        }
+
+        // Supprimer une expérience
+        function removeExperience(experienceId) {
+            const experienceElement = document.getElementById(`experience-${experienceId}`);
+            if (experienceElement) {
+                experienceElement.remove();
+                experiencesList = experiencesList.filter(exp => exp.id !== experienceId);
+            }
+        }
+
+        // Ajouter une formation
+        function addEducation() {
+            const educationContainer = document.getElementById('education-list');
+            const educationId = Date.now();
+            
+            const educationHTML = `
+                <div class="education-item" id="education-${educationId}">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Diplôme</label>
+                            <input type="text" name="diplome" placeholder="Ex: Licence informatique">
+                        </div>
+                        <div class="form-group">
+                            <label>Établissement</label>
+                            <input type="text" name="etablissement" placeholder="Ex: Université Paris">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Date de début</label>
+                            <input type="month" name="date_debut">
+                        </div>
+                        <div class="form-group">
+                            <label>Date de fin</label>
+                            <input type="month" name="date_fin">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea name="description" rows="3" placeholder="Description de la formation..."></textarea>
+                    </div>
+                    <button type="button" class="btn btn-danger" onclick="removeEducation(${educationId})">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                        Supprimer
+                    </button>
+                </div>
+            `;
+            
+            educationContainer.insertAdjacentHTML('beforeend', educationHTML);
+            educationList.push({ id: educationId });
+        }
+
+        // Supprimer une formation
+        function removeEducation(educationId) {
+            const educationElement = document.getElementById(`education-${educationId}`);
+            if (educationElement) {
+                educationElement.remove();
+                educationList = educationList.filter(edu => edu.id !== educationId);
+            }
+        }
+
+        // Gérer le téléchargement de CV
+        document.getElementById('cv-input').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                // Vérifier la taille du fichier (max 5MB)
+                if (file.size > 5 * 1024 * 1024) {
+                    showMessage('Le fichier ne doit pas dépasser 5MB', 'error');
+                    return;
+                }
+                
+                // Vérifier le type de fichier
+                const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+                if (!allowedTypes.includes(file.type)) {
+                    showMessage('Seuls les fichiers PDF, DOC et DOCX sont autorisés', 'error');
+                    return;
+                }
+                
+                // Afficher le nom du fichier
+                document.getElementById('cv-filename').textContent = `Fichier sélectionné: ${file.name}`;
+                
+                // Mettre à jour l'apparence de la zone de téléchargement
+                document.getElementById('cv-upload').classList.add('has-file');
+            }
+        });
+
+        // Sauvegarder le profil
+        async function saveProfile() {
+            try {
+                const token = localStorage.getItem('token');
+                const profileData = {
+                    nom: document.getElementById('nom').value,
+                    email: document.getElementById('email').value,
+                    telephone: document.getElementById('telephone').value,
+                                        adresse: document.getElementById('adresse').value,
+                    ville: document.getElementById('ville').value,
+                    bio: document.getElementById('bio').value,
+                    skills: skills
+                };
+
+                const response = await fetch(`/api/profile/${currentUser.id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(profileData)
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success) {
+                        showMessage('Profil mis à jour avec succès !', 'success');
+                        // Mettre à jour les données dans localStorage
+                        const updatedUser = { ...currentUser, ...profileData };
+                        localStorage.setItem('user', JSON.stringify(updatedUser));
+                        currentUser = updatedUser;
+                        displayProfile(updatedUser);
+                    } else {
+                        showMessage('Erreur lors de la mise à jour du profil', 'error');
+                    }
+                } else {
+                    showMessage('Erreur lors de la mise à jour du profil', 'error');
+                }
+            } catch (error) {
+                console.error('Erreur lors de la sauvegarde du profil:', error);
+                showMessage('Erreur lors de la sauvegarde du profil', 'error');
+            }
+        }
+
+        // Réinitialiser le formulaire
+        function resetForm() {
+            if (currentUser) {
+                displayProfile(currentUser);
+            }
+        }
+
+        // Afficher un message
+        function showMessage(message, type) {
+            const messageEl = document.createElement('div');
+            messageEl.className = `message message-${type}`;
+            messageEl.textContent = message;
+            
+            document.body.appendChild(messageEl);
+            
+            setTimeout(() => {
+                messageEl.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    if (document.body.contains(messageEl)) {
+                        document.body.removeChild(messageEl);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+            loadProfile();
+            
+            // Gérer les soumissions de formulaire
+            document.getElementById('personal-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveProfile();
+            });
+            
+            document.getElementById('professional-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveProfile();
+            });
+            
+            document.getElementById('education-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveProfile();
+            });
+            
+            document.getElementById('skills-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveProfile();
+            });
+            
+            // Gérer l'ajout de compétence avec Entrée
+            document.getElementById('new-skill').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    addSkill();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1277 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistiques - RECRUTDNCS</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            min-height: 100vh;
+            color: #e2e8f0;
+        }
+
+        .admin-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .admin-header {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 2rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .admin-header h1 {
+            margin: 0;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .admin-header p {
+            margin: 0.5rem 0 0 0;
+            opacity: 0.9;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .stats-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #10b981;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #6b7280;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-change {
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.25rem;
+        }
+
+        .stat-change.positive {
+            color: #10b981;
+        }
+
+        .stat-change.negative {
+            color: #ef4444;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin: 0;
+        }
+
+        .chart-subtitle {
+            color: #6b7280;
+            font-size: 0.9rem;
+            margin: 0.25rem 0 0 0;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .simple-chart {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            padding: 1rem;
+        }
+
+        .chart-bar {
+            width: 40px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-radius: 4px 4px 0 0;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .chart-bar:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .chart-bar-label {
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.8rem;
+            color: #6b7280;
+            white-space: nowrap;
+        }
+
+        .chart-bar-value {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .pie-chart {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            position: relative;
+            background: conic-gradient(
+                #3b82f6 0deg 252deg,
+                #f59e0b 252deg 342deg,
+                #ef4444 342deg 360deg
+            );
+        }
+
+        .pie-chart-legend {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-left: 2rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: #4b5563;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+        }
+
+        .recent-activity {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .activity-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .activity-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin: 0;
+        }
+
+        .activity-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            transition: background 0.3s ease;
+        }
+
+        .activity-item:hover {
+            background: #f8fafc;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .activity-icon.user {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .activity-icon.job {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .activity-icon.application {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .activity-icon.system {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-text {
+            color: #1f2937;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .activity-time {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: #6b7280;
+            font-size: 1.1rem;
+        }
+
+        .period-selector {
+            display: flex;
+            gap: 0.5rem;
+            background: #f3f4f6;
+            padding: 0.25rem;
+            border-radius: 8px;
+        }
+
+        .period-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            background: transparent;
+            color: #6b7280;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .period-btn.active {
+            background: white;
+            color: #1f2937;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .period-btn:hover:not(.active) {
+            color: #1f2937;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .admin-container {
+                padding: 1rem;
+            }
+
+            .admin-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+
+            .stats-overview {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .chart-container {
+                height: 250px;
+            }
+
+            .simple-chart {
+                padding: 0.5rem;
+            }
+
+            .chart-bar {
+                width: 30px;
+            }
+
+            .pie-chart {
+                width: 150px;
+                height: 150px;
+            }
+
+            .pie-chart-legend {
+                margin-left: 1rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stat-card {
+            animation: fadeIn 0.5s ease;
+        }
+
+        .stat-card:nth-child(1) { animation-delay: 0.1s; }
+        .stat-card:nth-child(2) { animation-delay: 0.2s; }
+        .stat-card:nth-child(3) { animation-delay: 0.3s; }
+        .stat-card:nth-child(4) { animation-delay: 0.4s; }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="admin-header">
+            <div>
+                <h1>Statistiques de la Plateforme</h1>
+                <p>Vue d'ensemble des performances et de l'activité</p>
+            </div>
+            <a href="dashboard-admin.html" class="back-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Retour au Dashboard
+            </a>
+        </div>
+
+        <div class="stats-overview">
+            <div class="stat-card">
+                <div class="stat-value" id="total-users">1,247</div>
+                <div class="stat-label">Utilisateurs totaux</div>
+                <div class="stat-change positive">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="23,6 13.5,15.5 8.5,10.5 1,18"></polyline>
+                        <polyline points="17,6 23,6 23,12"></polyline>
+                    </svg>
+                    +12.5% ce mois
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="total-jobs">127</div>
+                <div class="stat-label">Offres actives</div>
+                <div class="stat-change positive">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="23,6 13.5,15.5 8.5,10.5 1,18"></polyline>
+                        <polyline points="17,6 23,6 23,12"></polyline>
+                    </svg>
+                    +8.3% ce mois
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="total-applications">3,456</div>
+                <div class="stat-label">Candidatures totales</div>
+                <div class="stat-change positive">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="23,6 13.5,15.5 8.5,10.5 1,18"></polyline>
+                        <polyline points="17,6 23,6 23,12"></polyline>
+                    </svg>
+                    +23.7% ce mois
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="success-rate">68%</div>
+                <div class="stat-label">Taux de conversion</div>
+                <div class="stat-change positive">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="23,6 13.5,15.5 8.5,10.5 1,18"></polyline>
+                        <polyline points="17,6 23,6 23,12"></polyline>
+                    </svg>
+                    +5.2% ce mois
+                </div>
+            </div>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3 class="chart-title">Évolution des inscriptions</h3>
+                    <p class="chart-subtitle">Nouveaux utilisateurs par mois</p>
+                </div>
+                <div class="period-selector">
+                    <button class="period-btn active" data-period="month">Mois</button>
+                    <button class="period-btn" data-period="quarter">Trimestre</button>
+                    <button class="period-btn" data-period="year">Année</button>
+                </div>
+                <div class="chart-container">
+                    <div class="simple-chart" id="usersChart">
+                        <div class="chart-bar" style="height: 60%">
+                            <span class="chart-bar-value">65</span>
+                            <span class="chart-bar-label">Jan</span>
+                        </div>
+                        <div class="chart-bar" style="height: 72%">
+                            <span class="chart-bar-value">78</span>
+                            <span class="chart-bar-label">Fév</span>
+                        </div>
+                        <div class="chart-bar" style="height: 83%">
+                            <span class="chart-bar-value">90</span>
+                            <span class="chart-bar-label">Mar</span>
+                        </div>
+                        <div class="chart-bar" style="height: 75%">
+                            <span class="chart-bar-value">81</span>
+                            <span class="chart-bar-label">Avr</span>
+                        </div>
+                        <div class="chart-bar" style="height: 88%">
+                            <span class="chart-bar-value">96</span>
+                            <span class="chart-bar-label">Mai</span>
+                        </div>
+                        <div class="chart-bar" style="height: 100%">
+                            <span class="chart-bar-value">112</span>
+                            <span class="chart-bar-label">Juin</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3 class="chart-title">Répartition des rôles</h3>
+                    <p class="chart-subtitle">Utilisateurs par type de rôle</p>
+                </div>
+                <div class="chart-container">
+                    <div style="display: flex; align-items: center; justify-content: center;">
+                        <div class="pie-chart"></div>
+                        <div class="pie-chart-legend">
+                            <div class="legend-item">
+                                <div class="legend-color" style="background: #3b82f6;"></div>
+                                <span>Candidats (71.5%)</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background: #f59e0b;"></div>
+                                <span>Recruteurs (28.5%)</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background: #ef4444;"></div>
+                                <span>Admins (0.4%)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3 class="chart-title">Candidatures par mois</h3>
+                    <p class="chart-subtitle">Évolution des candidatures</p>
+                </div>
+                <div class="chart-container">
+                    <div class="simple-chart" id="applicationsChart">
+                        <div class="chart-bar" style="height: 64%; background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+                            <span class="chart-bar-value">420</span>
+                            <span class="chart-bar-label">Jan</span>
+                        </div>
+                        <div class="chart-bar" style="height: 74%; background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+                            <span class="chart-bar-value">485</span>
+                            <span class="chart-bar-label">Fév</span>
+                        </div>
+                        <div class="chart-bar" style="height: 78%; background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+                            <span class="chart-bar-value">512</span>
+                            <span class="chart-bar-label">Mar</span>
+                        </div>
+                        <div class="chart-bar" style="height: 76%; background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+                            <span class="chart-bar-value">498</span>
+                            <span class="chart-bar-label">Avr</span>
+                        </div>
+                        <div class="chart-bar" style="height: 90%; background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+                            <span class="chart-bar-value">587</span>
+                            <span class="chart-bar-label">Mai</span>
+                        </div>
+                        <div class="chart-bar" style="height: 100%; background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+                            <span class="chart-bar-value">654</span>
+                            <span class="chart-bar-label">Juin</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3 class="chart-title">Statuts des candidatures</h3>
+                    <p class="chart-subtitle">Répartition par statut</p>
+                </div>
+                <div class="chart-container">
+                    <div class="simple-chart" id="statusChart">
+                        <div class="chart-bar" style="height: 100%; background: linear-gradient(135deg, #f59e0b, #d97706);">
+                            <span class="chart-bar-value">1250</span>
+                            <span class="chart-bar-label">En attente</span>
+                        </div>
+                        <div class="chart-bar" style="height: 71%; background: linear-gradient(135deg, #3b82f6, #2563eb);">
+                            <span class="chart-bar-value">890</span>
+                            <span class="chart-bar-label">Entretien</span>
+                        </div>
+                        <div class="chart-bar" style="height: 36%; background: linear-gradient(135deg, #10b981, #059669);">
+                            <span class="chart-bar-value">456</span>
+                            <span class="chart-bar-label">Accepté</span>
+                        </div>
+                        <div class="chart-bar" style="height: 69%; background: linear-gradient(135deg, #ef4444, #dc2626);">
+                            <span class="chart-bar-value">860</span>
+                            <span class="chart-bar-label">Refusé</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+            </div>
+
+    <script>
+        class StatsManager {
+            constructor() {
+                this.currentUser = null;
+                this.token = localStorage.getItem('token');
+                
+                this.init();
+            }
+
+            init() {
+                this.checkAuth();
+                this.bindEvents();
+                this.loadStats();
+                this.loadActivity();
+            }
+
+            checkAuth() {
+                const token = localStorage.getItem('token');
+                const userStr = localStorage.getItem('user');
+                
+                if (!token || !userStr) {
+                    this.redirectToLogin();
+                    return;
+                }
+                
+                try {
+                    this.currentUser = JSON.parse(userStr);
+                    if (this.currentUser.role !== 'administrateur') {
+                        this.redirectToDashboard();
+                        return;
+                    }
+                } catch (error) {
+                    console.error('Erreur lors de la lecture des données utilisateur:', error);
+                    this.logout();
+                }
+            }
+
+            bindEvents() {
+                // Sélecteurs de période
+                document.querySelectorAll('.period-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+                        e.target.classList.add('active');
+                        this.updateCharts(e.target.dataset.period);
+                    });
+                });
+            }
+
+            async loadStats() {
+                try {
+                    const token = localStorage.getItem('token');
+                    const response = await fetch('/api/admin/stats', {
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        console.log('Données complètes reçues:', data);
+                        if (data.success && data.data) {
+                            console.log('data.data:', data.data);
+                            console.log('data.data.users:', data.data.users);
+                            console.log('data.data.applications:', data.data.applications);
+                            
+                            this.updateStats(data.data);
+                            this.updateRoleDistribution(data.data.users);
+                            this.updateApplicationStatusDistribution(data.data.applications);
+                            
+                            // Mettre à jour les graphiques avec les données réelles
+                            this.updateCharts('month');
+                        } else {
+                            throw new Error(data.message || 'Erreur lors du chargement');
+                        }
+                    } else {
+                        throw new Error('Erreur serveur');
+                    }
+                } catch (error) {
+                    console.error('Erreur lors du chargement des statistiques:', error);
+                }
+            }
+
+            getMockStats() {
+                return {
+                    totalUsers: 1247,
+                    totalJobs: 127,
+                    totalApplications: 3456,
+                    successRate: 68,
+                    userGrowth: 12.5,
+                    jobGrowth: 8.3,
+                    applicationGrowth: 23.7,
+                    successGrowth: 5.2
+                };
+            }
+
+            updateStats(stats) {
+                console.log('Stats reçues dans admin-stats:', stats);
+                
+                // Utiliser la structure réelle de l'API
+                const totalUsers = stats.users?.total || 0;
+                const totalJobs = stats.jobs?.total_jobs || 0;
+                const totalApplications = stats.applications?.total || 0;
+                
+                // Calculer le taux de succès (candidatures acceptées / total candidatures)
+                const acceptedApplications = stats.applications?.by_status?.find(s => s.statut === 'accepte')?.count || 0;
+                const successRate = totalApplications > 0 ? Math.round((acceptedApplications / totalApplications) * 100) : 0;
+                
+                document.getElementById('total-users').textContent = totalUsers.toLocaleString();
+                document.getElementById('total-jobs').textContent = totalJobs.toLocaleString();
+                document.getElementById('total-applications').textContent = totalApplications.toLocaleString();
+                document.getElementById('success-rate').textContent = successRate + '%';
+                
+                console.log('Valeurs mises à jour:', {
+                    totalUsers,
+                    totalJobs,
+                    totalApplications,
+                    successRate
+                });
+            }
+
+            async updateCharts(period) {
+                try {
+                    const token = localStorage.getItem('token');
+                    const [usersResponse, applicationsResponse] = await Promise.all([
+                        fetch('/api/admin/users?limit=100', {
+                            headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
+                        }),
+                        fetch('/api/admin/applications?limit=100', {
+                            headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
+                        })
+                    ]);
+                    
+                    let usersData = [];
+                    let applicationsData = [];
+                    
+                    if (usersResponse.ok) {
+                        const users = await usersResponse.json();
+                        if (users.success && users.data) {
+                            usersData = users.data.users;
+                        }
+                    }
+                    
+                    if (applicationsResponse.ok) {
+                        const applications = await applicationsResponse.json();
+                        if (applications.success && applications.data) {
+                            applicationsData = applications.data.applications;
+                        }
+                    }
+                    
+                    const chartData = this.processChartData(usersData, applicationsData, period);
+                    console.log('Données des graphiques:', {
+                        period,
+                        usersData: usersData.map(u => ({ nom: u.nom, created_at: u.created_at })),
+                        applicationsData: applicationsData.map(a => ({ job_titre: a.job_titre, created_at: a.created_at })),
+                        chartData
+                    });
+                    this.updateSimpleChart('usersChart', chartData.users, chartData.labels);
+                    this.updateSimpleChart('applicationsChart', chartData.applications, chartData.labels);
+                } catch (error) {
+                    console.error('Erreur lors du chargement des données pour les graphiques:', error);
+                    // Utiliser des données par défaut en cas d'erreur
+                    this.updateChartsWithDefaultData(period);
+                }
+            }
+            
+            processChartData(users, applications, period) {
+                const now = new Date();
+                const currentYear = now.getFullYear();
+                const currentMonth = now.getMonth();
+                
+                let labels = [];
+                let usersCounts = [];
+                let applicationsCounts = [];
+                
+                if (period === 'month') {
+                    // 6 derniers mois
+                    for (let i = 5; i >= 0; i--) {
+                        const date = new Date(currentYear, currentMonth - i, 1);
+                        labels.push(this.getMonthName(date.getMonth()));
+                        
+                        const monthStart = new Date(date.getFullYear(), date.getMonth(), 1);
+                        const monthEnd = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+                        
+                        usersCounts.push(users.filter(u => {
+                            const userDate = new Date(u.created_at);
+                            return userDate >= monthStart && userDate <= monthEnd;
+                        }).length);
+                        
+                        applicationsCounts.push(applications.filter(a => {
+                            const appDate = new Date(a.created_at);
+                            return appDate >= monthStart && appDate <= monthEnd;
+                        }).length);
+                    }
+                } else if (period === 'quarter') {
+                    // 4 derniers trimestres
+                    for (let i = 3; i >= 0; i--) {
+                        const quarter = Math.floor((currentMonth - i * 3) / 3) + 1;
+                        const year = currentYear;
+                        labels.push(`T${quarter}`);
+                        
+                        const quarterStart = new Date(year, (quarter - 1) * 3, 1);
+                        const quarterEnd = new Date(year, quarter * 3, 0);
+                        
+                        usersCounts.push(users.filter(u => {
+                            const userDate = new Date(u.created_at);
+                            return userDate >= quarterStart && userDate <= quarterEnd;
+                        }).length);
+                        
+                        applicationsCounts.push(applications.filter(a => {
+                            const appDate = new Date(a.created_at);
+                            return appDate >= quarterStart && appDate <= quarterEnd;
+                        }).length);
+                    }
+                } else {
+                    // Année en cours
+                    labels = [currentYear.toString()];
+                    usersCounts = [users.length];
+                    applicationsCounts = [applications.length];
+                }
+                
+                return {
+                    users: usersCounts,
+                    applications: applicationsCounts,
+                    labels: labels
+                };
+            }
+            
+            getMonthName(monthIndex) {
+                const months = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'];
+                return months[monthIndex];
+            }
+            
+            updateChartsWithDefaultData(period) {
+                const periodData = {
+                    month: {
+                        users: [3, 4, 2, 3, 1, 1],
+                        applications: [2, 3, 2, 3, 2, 2]
+                    },
+                    quarter: {
+                        users: [7, 4, 3],
+                        applications: [5, 5, 4]
+                    },
+                    year: {
+                        users: [14],
+                        applications: [14]
+                    }
+                };
+
+                const data = periodData[period] || periodData.month;
+                const labels = period === 'month' ? ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin'] : 
+                              period === 'quarter' ? ['T1', 'T2', 'T3', 'T4'] : 
+                              ['2024'];
+
+                this.updateSimpleChart('usersChart', data.users, labels);
+                this.updateSimpleChart('applicationsChart', data.applications, labels);
+            }
+
+            updateSimpleChart(chartId, data, labels) {
+                const chart = document.getElementById(chartId);
+                const maxValue = Math.max(...data);
+                
+                chart.innerHTML = data.map((value, index) => `
+                    <div class="chart-bar" style="height: ${(value / maxValue) * 100}%; background: linear-gradient(135deg, ${chartId === 'applicationsChart' ? '#8b5cf6, #7c3aed' : '#10b981, #059669'});">
+                        <span class="chart-bar-value">${value}</span>
+                        <span class="chart-bar-label">${labels[index]}</span>
+                    </div>
+                `).join('');
+            }
+
+            updateRoleDistribution(usersData) {
+                console.log('Mise à jour de la répartition des rôles:', usersData);
+                
+                const roleData = usersData?.by_role || [];
+                const total = usersData?.total || 0;
+                
+                if (roleData.length === 0 || total === 0) {
+                    console.log('Pas de données de rôles disponibles');
+                    return;
+                }
+                
+                // Mettre à jour le diagramme circulaire
+                const candidates = roleData.find(r => r.role === 'candidat')?.count || 0;
+                const recruiters = roleData.find(r => r.role === 'recruteur')?.count || 0;
+                const admins = roleData.find(r => r.role === 'administrateur')?.count || 0;
+                
+                const candidatesPercent = ((candidates / total) * 100).toFixed(1);
+                const recruitersPercent = ((recruiters / total) * 100).toFixed(1);
+                const adminsPercent = ((admins / total) * 100).toFixed(1);
+                
+                // Calculer les angles pour le diagramme circulaire
+                const candidatesAngle = (candidates / total) * 360;
+                const recruitersAngle = (recruiters / total) * 360;
+                const adminsAngle = (admins / total) * 360;
+                
+                // Mettre à jour le CSS du diagramme circulaire
+                const pieChart = document.querySelector('.pie-chart');
+                console.log('Élément pie-chart trouvé:', !!pieChart);
+                if (pieChart) {
+                    const gradient = [
+                        `#3b82f6 0deg ${candidatesAngle}deg`,
+                        `#f59e0b ${candidatesAngle}deg ${candidatesAngle + recruitersAngle}deg`,
+                        `#ef4444 ${candidatesAngle + recruitersAngle}deg 360deg`
+                    ].join(', ');
+                    
+                    const newBackground = `conic-gradient(${gradient})`;
+                    console.log('Nouveau background pour pie-chart:', newBackground);
+                    pieChart.style.background = newBackground;
+                } else {
+                    console.error('Élément .pie-chart non trouvé!');
+                }
+                
+                // Mettre à jour la légende
+                const legendContainer = document.querySelector('.pie-chart-legend');
+                console.log('Élément pie-chart-legend trouvé:', !!legendContainer);
+                if (legendContainer) {
+                    const newLegend = `
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #3b82f6;"></div>
+                            <span>Candidats (${candidatesPercent}%)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #f59e0b;"></div>
+                            <span>Recruteurs (${recruitersPercent}%)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #ef4444;"></div>
+                            <span>Admins (${adminsPercent}%)</span>
+                        </div>
+                    `;
+                    console.log('Nouvelle légende:', newLegend);
+                    legendContainer.innerHTML = newLegend;
+                    
+                    // Forcer le rafraîchissement visuel
+                    legendContainer.style.display = 'none';
+                    setTimeout(() => {
+                        legendContainer.style.display = 'flex';
+                    }, 10);
+                } else {
+                    console.error('Élément .pie-chart-legend non trouvé!');
+                }
+                
+                console.log('Répartition des rôles mise à jour:', {
+                    candidates,
+                    recruiters,
+                    admins,
+                    total,
+                    candidatesAngle,
+                    recruitersAngle,
+                    adminsAngle,
+                    percentages: { candidates: candidatesPercent, recruiters: recruitersPercent, admins: adminsPercent }
+                });
+            }
+
+            updateApplicationStatusDistribution(applicationsData) {
+                console.log('Mise à jour de la répartition des statuts:', applicationsData);
+                
+                const statusData = applicationsData?.by_status || [];
+                const total = applicationsData?.total || 0;
+                
+                if (statusData.length === 0 || total === 0) {
+                    console.log('Pas de données de statuts disponibles');
+                    return;
+                }
+                
+                // Récupérer les statuts avec leurs couleurs
+                const statusColors = {
+                    'en_attente': '#f59e0b',
+                    'en_revue': '#3b82f6', 
+                    'entretien': '#3b82f6',
+                    'accepte': '#10b981',
+                    'refuse': '#ef4444'
+                };
+                
+                const statusLabels = {
+                    'en_attente': 'En attente',
+                    'en_revue': 'En révision',
+                    'entretien': 'Entretien',
+                    'accepte': 'Accepté',
+                    'refuse': 'Refusé'
+                };
+                
+                // Créer les barres pour le diagramme
+                const statusChart = document.getElementById('statusChart');
+                console.log('Élément statusChart trouvé:', !!statusChart);
+                if (statusChart) {
+                    const maxValue = Math.max(...statusData.map(s => s.count));
+                    console.log('MaxValue pour statuts:', maxValue);
+                    
+                    const newHTML = statusData.map(status => {
+                        const color = statusColors[status.statut] || '#6b7280';
+                        const label = statusLabels[status.statut] || status.statut;
+                        const height = (status.count / maxValue) * 100;
+                        
+                        console.log(`Statut ${status.statut}: count=${status.count}, height=${height}%, color=${color}`);
+                        
+                        return `
+                            <div class="chart-bar" style="height: ${height}%; background: linear-gradient(135deg, ${color}, ${color}dd);">
+                                <span class="chart-bar-value">${status.count}</span>
+                                <span class="chart-bar-label">${label}</span>
+                            </div>
+                        `;
+                    }).join('');
+                    
+                    console.log('Nouveau HTML pour statusChart:', newHTML);
+                    statusChart.innerHTML = newHTML;
+                    
+                    // Forcer le rafraîchissement visuel
+                    statusChart.style.opacity = '0';
+                    setTimeout(() => {
+                        statusChart.style.opacity = '1';
+                    }, 10);
+                } else {
+                    console.error('Élément #statusChart non trouvé!');
+                }
+                
+                console.log('Répartition des statuts mise à jour:', {
+                    statusData,
+                    total,
+                    maxValue: statusData.length > 0 ? Math.max(...statusData.map(s => s.count)) : 0
+                });
+            }
+
+            async loadActivity() {
+                try {
+                    const token = localStorage.getItem('token');
+                    const [usersResponse, jobsResponse, applicationsResponse] = await Promise.all([
+                        fetch('/api/admin/users?limit=5', {
+                            headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
+                        }),
+                        fetch('/api/admin/jobs?limit=5', {
+                            headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
+                        }),
+                        fetch('/api/admin/applications?limit=5', {
+                            headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
+                        })
+                    ]);
+                    
+                    const activity = [];
+                    
+                    // Ajouter les utilisateurs récents
+                    if (usersResponse.ok) {
+                        const usersData = await usersResponse.json();
+                        if (usersData.success && usersData.data) {
+                            usersData.data.users.forEach(user => {
+                                activity.push({
+                                    type: 'user',
+                                    text: `Nouvel utilisateur inscrit: ${user.nom}`,
+                                    time: this.formatTime(user.created_at),
+                                    timeRaw: user.created_at
+                                });
+                            });
+                        }
+                    }
+                    
+                    // Ajouter les offres récentes
+                    if (jobsResponse.ok) {
+                        const jobsData = await jobsResponse.json();
+                        if (jobsData.success && jobsData.data) {
+                            jobsData.data.jobs.forEach(job => {
+                                activity.push({
+                                    type: 'job',
+                                    text: `Nouvelle offre publiée: ${job.titre}`,
+                                    time: this.formatTime(job.created_at),
+                                    timeRaw: job.created_at
+                                });
+                            });
+                        }
+                    }
+                    
+                    // Ajouter les candidatures récentes
+                    if (applicationsResponse.ok) {
+                        const applicationsData = await applicationsResponse.json();
+                        if (applicationsData.success && applicationsData.data) {
+                            applicationsData.data.applications.forEach(app => {
+                                activity.push({
+                                    type: 'application',
+                                    text: `Candidature soumise pour: ${app.job_titre}`,
+                                    time: this.formatTime(app.created_at),
+                                    timeRaw: app.created_at
+                                });
+                            });
+                        }
+                    }
+                    
+                    // Trier par date (plus récent d'abord)
+                    activity.sort((a, b) => new Date(b.timeRaw) - new Date(a.timeRaw));
+                    
+                    this.renderActivity(activity.slice(0, 6)); // Limiter à 6 activités
+                } catch (error) {
+                    console.error('Erreur lors du chargement de l\'activité:', error);
+                }
+            }
+
+            formatTime(dateString) {
+                const date = new Date(dateString);
+                const now = new Date();
+                const diffMs = now - date;
+                const diffMins = Math.floor(diffMs / 60000);
+                const diffHours = Math.floor(diffMs / 3600000);
+                const diffDays = Math.floor(diffMs / 86400000);
+                
+                if (diffMins < 60) {
+                    return `Il y a ${diffMins} minute${diffMins > 1 ? 's' : ''}`;
+                } else if (diffHours < 24) {
+                    return `Il y a ${diffHours} heure${diffHours > 1 ? 's' : ''}`;
+                } else {
+                    return `Il y a ${diffDays} jour${diffDays > 1 ? 's' : ''}`;
+                }
+            }
+
+            getMockActivity() {
+                return [
+                    {
+                        type: 'user',
+                        text: 'Nouvel utilisateur inscrit: Marie Dupont',
+                        time: 'Il y a 5 minutes'
+                    },
+                    {
+                        type: 'job',
+                        text: 'Nouvelle offre publiée: Développeur Frontend',
+                        time: 'Il y a 15 minutes'
+                    },
+                    {
+                        type: 'application',
+                        text: 'Candidature soumise pour: UX Designer',
+                        time: 'Il y a 23 minutes'
+                    },
+                    {
+                        type: 'system',
+                        text: 'Sauvegarde automatique des données',
+                        time: 'Il y a 1 heure'
+                    },
+                    {
+                        type: 'user',
+                        text: 'Nouvel utilisateur inscrit: Tech Solutions',
+                        time: 'Il y a 2 heures'
+                    },
+                    {
+                        type: 'application',
+                        text: 'Mise à jour du statut: Entretien',
+                        time: 'Il y a 3 heures'
+                    }
+                ];
+            }
+
+            renderActivity(activity) {
+                const container = document.getElementById('activity-list');
+                
+                if (!container) {
+                    console.error('Élément activity-list non trouvé');
+                    return;
+                }
+                
+                container.innerHTML = activity.map(item => {
+                    const iconClass = `activity-icon ${item.type}`;
+                    const iconSvg = this.getActivityIcon(item.type);
+                    
+                    return `
+                        <li class="activity-item">
+                            <div class="${iconClass}">
+                                ${iconSvg}
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-text">${item.text}</div>
+                                <div class="activity-time">${item.time}</div>
+                            </div>
+                        </li>
+                    `;
+                }).join('');
+            }
+
+            getActivityIcon(type) {
+                const icons = {
+                    user: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>',
+                    job: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>',
+                    application: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14,2 14,8 20,8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>',
+                    system: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M12 1v6m0 6v6m4.22-13.22l4.24 4.24M1.54 9.54l4.24 4.24M20.46 14.46l-4.24 4.24M7.78 7.78L3.54 3.54"></path></svg>'
+                };
+                return icons[type] || icons.system;
+            }
+
+            async refreshActivity() {
+                const container = document.getElementById('activity-list');
+                container.innerHTML = '<div class="loading">Actualisation...</div>';
+                
+                setTimeout(() => {
+                    this.loadActivity();
+                }, 1000);
+            }
+
+            logout() {
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                this.redirectToLogin();
+            }
+
+            redirectToLogin() {
+                window.location.href = 'login.html';
+            }
+
+            redirectToDashboard() {
+                const dashboardUrls = {
+                    'candidat': 'dashboard-candidat.html',
+                    'recruteur': 'dashboard-recruteur.html',
+                    'administrateur': 'dashboard-admin.html'
+                };
+                const url = dashboardUrls[this.currentUser?.role] || 'login.html';
+                window.location.href = url;
+            }
+        }
+
+        // Fonction globale pour le bouton
+        function refreshActivity() {
+            if (window.statsManager) {
+                window.statsManager.refreshActivity();
+            }
+        }
+
+        // Initialiser l'application
+        document.addEventListener('DOMContentLoaded', function() {
+            window.statsManager = new StatsManager();
+        });
+    </script>
+</body>
+</html>

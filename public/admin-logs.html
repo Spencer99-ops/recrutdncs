@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logs Système - RECRUTDNCS</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            min-height: 100vh;
+            color: #e2e8f0;
+        }
+
+        .admin-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .admin-header {
+            background: linear-gradient(135deg, #6b7280, #4b5563);
+            color: white;
+            padding: 2rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(107, 114, 128, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .admin-header h1 {
+            margin: 0;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .admin-header p {
+            margin: 0.5rem 0 0 0;
+            opacity: 0.9;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .logs-controls {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 300px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+            color: #1f2937;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #6b7280;
+            box-shadow: 0 0 0 3px rgba(107, 114, 128, 0.1);
+        }
+
+        .search-box svg {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            color: #6b7280;
+        }
+
+        .filter-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .filter-controls select {
+            padding: 0.75rem 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            background: white;
+            color: #1f2937;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-controls select:focus {
+            outline: none;
+            border-color: #6b7280;
+            box-shadow: 0 0 0 3px rgba(107, 114, 128, 0.1);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #6b7280, #4b5563);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(107, 114, 128, 0.3);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .logs-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .logs-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .logs-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin: 0;
+        }
+
+        .logs-info {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        .logs-list {
+            max-height: 600px;
+            overflow-y: auto;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        .log-entry {
+            padding: 0.75rem;
+            border-bottom: 1px solid #f3f4f6;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            transition: background 0.3s ease;
+        }
+
+        .log-entry:hover {
+            background: #f8fafc;
+        }
+
+        .log-entry:last-child {
+            border-bottom: none;
+        }
+
+        .log-timestamp {
+            color: #6b7280;
+            font-size: 0.8rem;
+            min-width: 140px;
+            flex-shrink: 0;
+        }
+
+        .log-level {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            min-width: 60px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .level-info {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .level-warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .level-error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .level-debug {
+            background: #f3f4f6;
+            color: #6b7280;
+        }
+
+        .level-success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .log-message {
+            flex: 1;
+            color: #1f2937;
+            word-break: break-word;
+        }
+
+        .log-details {
+            margin-top: 0.5rem;
+            padding: 0.5rem;
+            background: #f8fafc;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            color: #6b7280;
+            display: none;
+        }
+
+        .log-entry.expanded .log-details {
+            display: block;
+        }
+
+        .log-toggle {
+            cursor: pointer;
+            color: #3b82f6;
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+            display: inline-block;
+        }
+
+        .log-toggle:hover {
+            text-decoration: underline;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #6b7280;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .stat-info { color: #3b82f6; }
+        .stat-warning { color: #f59e0b; }
+        .stat-error { color: #ef4444; }
+        .stat-debug { color: #6b7280; }
+        .stat-success { color: #10b981; }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: #6b7280;
+            font-size: 1.1rem;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 3rem;
+            color: #6b7280;
+        }
+
+        .no-results svg {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* Scrollbar styling */
+        .logs-list::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .logs-list::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 4px;
+        }
+
+        .logs-list::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        .logs-list::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .admin-container {
+                padding: 1rem;
+            }
+
+            .admin-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+
+            .logs-controls {
+                flex-direction: column;
+            }
+
+            .search-box {
+                min-width: 100%;
+            }
+
+            .filter-controls {
+                width: 100%;
+                justify-content: stretch;
+            }
+
+            .filter-controls select {
+                flex: 1;
+            }
+
+            .log-entry {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .log-timestamp {
+                min-width: auto;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .log-entry {
+            animation: fadeIn 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="admin-header">
+            <div>
+                <h1>Logs Système</h1>
+                <p>Surveillez l'activité et les erreurs de la plateforme</p>
+            </div>
+            <a href="dashboard-admin.html" class="back-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Retour au Dashboard
+            </a>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value stat-info" id="info-count">0</div>
+                <div class="stat-label">Infos</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value stat-success" id="success-count">0</div>
+                <div class="stat-label">Succès</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value stat-warning" id="warning-count">0</div>
+                <div class="stat-label">Avertissements</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value stat-error" id="error-count">0</div>
+                <div class="stat-label">Erreurs</div>
+            </div>
+        </div>
+
+        <div class="logs-controls">
+            <div class="search-box">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.35-4.35"></path>
+                </svg>
+                <input type="text" id="search-input" placeholder="Rechercher dans les logs...">
+            </div>
+            <div class="filter-controls">
+                <select id="level-filter">
+                    <option value="">Tous les niveaux</option>
+                    <option value="info">Info</option>
+                    <option value="success">Success</option>
+                    <option value="warning">Warning</option>
+                    <option value="error">Error</option>
+                    <option value="debug">Debug</option>
+                </select>
+                <select id="date-filter">
+                    <option value="">Toutes les dates</option>
+                    <option value="today">Aujourd'hui</option>
+                    <option value="week">Cette semaine</option>
+                    <option value="month">Ce mois</option>
+                </select>
+                <button class="btn btn-secondary" onclick="logsManager.exportLogs()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7,10 12,15 17,10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    Exporter
+                </button>
+                <button class="btn btn-primary" onclick="logsManager.refreshLogs()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="23,4 23,10 17,10"></polyline>
+                        <polyline points="1,20 1,14 7,14"></polyline>
+                        <path d="M3.51,9a9,9,0,0,1,14.85-3.36L23,10M1,14l4.64,4.36A9,9,0,0,0,20.49,15"></path>
+                    </svg>
+                    Actualiser
+                </button>
+            </div>
+        </div>
+
+        <div class="logs-container">
+            <div class="logs-header">
+                <h2 class="logs-title">Logs du système</h2>
+                <div class="logs-info">
+                    <span id="logs-count">0</span> entrées | 
+                    Dernière mise à jour: <span id="last-update">-</span>
+                </div>
+            </div>
+            <div id="logs-list" class="logs-list">
+                <div class="loading">Chargement des logs...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class LogsManager {
+            constructor() {
+                this.logs = [];
+                this.filteredLogs = [];
+                this.currentUser = null;
+                this.token = localStorage.getItem('token');
+                
+                this.init();
+            }
+
+            init() {
+                this.checkAuth();
+                this.bindEvents();
+                this.loadLogs();
+                
+                // Auto-refresh toutes les 30 secondes
+                setInterval(() => this.loadLogs(), 30000);
+            }
+
+            checkAuth() {
+                const token = localStorage.getItem('token');
+                const userStr = localStorage.getItem('user');
+                
+                if (!token || !userStr) {
+                    this.redirectToLogin();
+                    return;
+                }
+                
+                try {
+                    this.currentUser = JSON.parse(userStr);
+                    if (this.currentUser.role !== 'administrateur') {
+                        this.redirectToDashboard();
+                        return;
+                    }
+                } catch (error) {
+                    console.error('Erreur lors de la lecture des données utilisateur:', error);
+                    this.logout();
+                }
+            }
+
+            bindEvents() {
+                // Recherche et filtres
+                document.getElementById('search-input').addEventListener('input', () => this.filterLogs());
+                document.getElementById('level-filter').addEventListener('change', () => this.filterLogs());
+                document.getElementById('date-filter').addEventListener('change', () => this.filterLogs());
+            }
+
+            async loadLogs() {
+                try {
+                    // TODO: Connecter à l'API des logs quand disponible
+                    // Pour l'instant, utiliser les données mock
+                    const mockLogs = this.getMockLogs();
+                    this.logs = mockLogs;
+                    this.filteredLogs = [...this.logs];
+                    this.renderLogs();
+                    this.updateStats();
+                    this.updateLastUpdate();
+                } catch (error) {
+                    console.error('Erreur lors du chargement des logs:', error);
+                    this.showError('Erreur lors du chargement des logs');
+                }
+            }
+
+            getMockLogs() {
+                const now = new Date();
+                const logs = [];
+                
+                const logTypes = [
+                    { level: 'info', message: 'Nouvel utilisateur inscrit', details: 'Email: marie.dupont@email.com, ID: 1234' },
+                    { level: 'success', message: 'Connexion réussie', details: 'Utilisateur: jean.martin@email.com, IP: 192.168.1.1' },
+                    { level: 'warning', message: 'Tentative de connexion échouée', details: 'Email: test@test.com, Raison: Mot de passe incorrect' },
+                    { level: 'error', message: 'Erreur de base de données', details: 'Connection timeout à la table users' },
+                    { level: 'debug', message: 'API appelée', details: 'GET /api/users, Response time: 45ms' },
+                    { level: 'info', message: 'Offre d\'emploi créée', details: 'Titre: Développeur Frontend, Entreprise: Tech Solutions' },
+                    { level: 'success', message: 'Candidature soumise', details: 'Offre ID: 567, Candidat: 1234' },
+                    { level: 'warning', message: 'Espace disque faible', details: 'Espace restant: 15%, Seuil: 10%' },
+                    { level: 'error', message: 'Erreur d\'envoi d\'email', details: 'SMTP: Connection refused, To: user@example.com' },
+                    { level: 'info', message: 'Sauvegarde automatique', details: 'Database backup completed, Size: 2.3GB' },
+                    { level: 'success', message: 'Mise à jour du système', details: 'Version 2.1.0 installée avec succès' },
+                    { level: 'warning', message: 'Pic de trafic détecté', details: 'Requests/sec: 1500, Normal: 500' },
+                    { level: 'error', message: 'Service indisponible', details: 'Service: auth-api, Status: 503' },
+                    { level: 'debug', message: 'Cache nettoyé', details: 'Entries removed: 1250, Memory freed: 45MB' },
+                    { level: 'info', message: 'Nouveau recruteur inscrit', details: 'Email: contact@company.com, Vérifié: Non' }
+                ];
+
+                // Générer des logs avec des timestamps différents
+                for (let i = 0; i < 50; i++) {
+                    const logType = logTypes[i % logTypes.length];
+                    const timestamp = new Date(now.getTime() - (i * 5 * 60 * 1000)); // Chaque log espacé de 5 minutes
+                    
+                    logs.push({
+                        id: i + 1,
+                        timestamp: timestamp.toISOString(),
+                        level: logType.level,
+                        message: logType.message,
+                        details: logType.details,
+                        userId: Math.floor(Math.random() * 1000) + 1,
+                        ip: `192.168.1.${Math.floor(Math.random() * 255) + 1}`,
+                        userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                    });
+                }
+
+                return logs.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            }
+
+            renderLogs() {
+                const container = document.getElementById('logs-list');
+                
+                if (this.filteredLogs.length === 0) {
+                    container.innerHTML = `
+                        <div class="no-results">
+                            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14,2 14,8 20,8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                            </svg>
+                            <h3>Aucun log trouvé</h3>
+                            <p>Aucun log ne correspond à vos critères de recherche.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = this.filteredLogs.map(log => `
+                    <div class="log-entry" data-id="${log.id}">
+                        <div class="log-timestamp">${this.formatTimestamp(log.timestamp)}</div>
+                        <div class="log-level level-${log.level}">${log.level}</div>
+                        <div class="log-message">
+                            <div>${log.message}</div>
+                            ${log.details ? `
+                                <div class="log-details">
+                                    <strong>Détails:</strong> ${log.details}<br>
+                                    <strong>IP:</strong> ${log.ip}<br>
+                                    <strong>User ID:</strong> ${log.userId}<br>
+                                    <strong>User Agent:</strong> ${log.userAgent}
+                                </div>
+                                <span class="log-toggle" onclick="logsManager.toggleLogDetails(${log.id})">
+                                    Afficher les détails
+                                </span>
+                            ` : ''}
+                        </div>
+                    </div>
+                `).join('');
+
+                document.getElementById('logs-count').textContent = this.filteredLogs.length;
+            }
+
+            formatTimestamp(timestamp) {
+                const date = new Date(timestamp);
+                return date.toLocaleString('fr-FR', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                });
+            }
+
+            updateStats() {
+                const stats = {
+                    info: 0,
+                    success: 0,
+                    warning: 0,
+                    error: 0,
+                    debug: 0
+                };
+
+                this.logs.forEach(log => {
+                    stats[log.level] = (stats[log.level] || 0) + 1;
+                });
+
+                document.getElementById('info-count').textContent = stats.info;
+                document.getElementById('success-count').textContent = stats.success;
+                document.getElementById('warning-count').textContent = stats.warning;
+                document.getElementById('error-count').textContent = stats.error;
+            }
+
+            updateLastUpdate() {
+                const now = new Date();
+                document.getElementById('last-update').textContent = now.toLocaleTimeString('fr-FR');
+            }
+
+            filterLogs() {
+                const searchTerm = document.getElementById('search-input').value.toLowerCase();
+                const levelFilter = document.getElementById('level-filter').value;
+                const dateFilter = document.getElementById('date-filter').value;
+                
+                this.filteredLogs = this.logs.filter(log => {
+                    // Filtre de recherche
+                    if (searchTerm && !log.message.toLowerCase().includes(searchTerm) && 
+                        !log.details.toLowerCase().includes(searchTerm)) {
+                        return false;
+                    }
+                    
+                    // Filtre de niveau
+                    if (levelFilter && log.level !== levelFilter) {
+                        return false;
+                    }
+                    
+                    // Filtre de date
+                    if (dateFilter) {
+                        const logDate = new Date(log.timestamp);
+                        const now = new Date();
+                        
+                        switch (dateFilter) {
+                            case 'today':
+                                if (logDate.toDateString() !== now.toDateString()) {
+                                    return false;
+                                }
+                                break;
+                            case 'week':
+                                const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+                                if (logDate < weekAgo) {
+                                    return false;
+                                }
+                                break;
+                            case 'month':
+                                const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+                                if (logDate < monthAgo) {
+                                    return false;
+                                }
+                                break;
+                        }
+                    }
+                    
+                    return true;
+                });
+
+                this.renderLogs();
+            }
+
+            toggleLogDetails(logId) {
+                const logEntry = document.querySelector(`.log-entry[data-id="${logId}"]`);
+                const toggle = logEntry.querySelector('.log-toggle');
+                
+                if (logEntry.classList.contains('expanded')) {
+                    logEntry.classList.remove('expanded');
+                    toggle.textContent = 'Afficher les détails';
+                } else {
+                    logEntry.classList.add('expanded');
+                    toggle.textContent = 'Masquer les détails';
+                }
+            }
+
+            async refreshLogs() {
+                const container = document.getElementById('logs-list');
+                container.innerHTML = '<div class="loading">Actualisation des logs...</div>';
+                
+                setTimeout(() => {
+                    this.loadLogs();
+                }, 1000);
+            }
+
+            async exportLogs() {
+                try {
+                    const csvContent = this.generateCSV();
+                    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                    const link = document.createElement('a');
+                    const url = URL.createObjectURL(blob);
+                    
+                    link.setAttribute('href', url);
+                    link.setAttribute('download', `logs_${new Date().toISOString().split('T')[0]}.csv`);
+                    link.style.visibility = 'hidden';
+                    
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    
+                    this.showNotification('Logs exportés avec succès', 'success');
+                } catch (error) {
+                    console.error('Erreur lors de l\'export:', error);
+                    this.showNotification('Erreur lors de l\'export', 'error');
+                }
+            }
+
+            generateCSV() {
+                const headers = ['Timestamp', 'Level', 'Message', 'Details', 'IP', 'User ID'];
+                const rows = this.filteredLogs.map(log => [
+                    this.formatTimestamp(log.timestamp),
+                    log.level,
+                    log.message,
+                    log.details || '',
+                    log.ip,
+                    log.userId
+                ]);
+                
+                const csvContent = [
+                    headers.join(','),
+                    ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
+                ].join('\n');
+                
+                return csvContent;
+            }
+
+            showError(message) {
+                const container = document.getElementById('logs-list');
+                container.innerHTML = `
+                    <div class="no-results">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                        <h3>Erreur</h3>
+                        <p>${message}</p>
+                    </div>
+                `;
+            }
+
+            showNotification(message, type) {
+                const notification = document.createElement('div');
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    padding: 1rem 1.5rem;
+                    background: ${type === 'success' ? '#10b981' : '#ef4444'};
+                    color: white;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+                    z-index: 1001;
+                    animation: slideIn 0.3s ease;
+                `;
+                notification.textContent = message;
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.style.animation = 'fadeOut 0.3s ease';
+                    setTimeout(() => {
+                        document.body.removeChild(notification);
+                    }, 300);
+                }, 3000);
+            }
+
+            logout() {
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                this.redirectToLogin();
+            }
+
+            redirectToLogin() {
+                window.location.href = 'login.html';
+            }
+
+            redirectToDashboard() {
+                const dashboardUrls = {
+                    'candidat': 'dashboard-candidat.html',
+                    'recruteur': 'dashboard-recruteur.html',
+                    'administrateur': 'dashboard-admin.html'
+                };
+                const url = dashboardUrls[this.currentUser?.role] || 'login.html';
+                window.location.href = url;
+            }
+        }
+
+        // Initialiser l'application
+        let logsManager;
+        document.addEventListener('DOMContentLoaded', function() {
+            logsManager = new LogsManager();
+        });
+
+        // Ajouter les animations CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+            
+            @keyframes fadeOut {
+                from {
+                    opacity: 1;
+                }
+                to {
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

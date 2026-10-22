@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Recruteur - RecrutDNCS</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin: 0;
+        }
+
+        .header p {
+            color: #6b7280;
+            margin-top: 0.5rem;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: #f3f4f6;
+            border: none;
+            border-radius: 8px;
+            color: #374151;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: #e5e7eb;
+            transform: translateY(-2px);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .stat-title {
+            font-size: 0.875rem;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stat-icon.blue {
+            background: #dbeafe;
+            color: #3b82f6;
+        }
+
+        .stat-icon.green {
+            background: #d1fae5;
+            color: #10b981;
+        }
+
+        .stat-icon.purple {
+            background: #e9d5ff;
+            color: #8b5cf6;
+        }
+
+        .stat-icon.orange {
+            background: #fed7aa;
+            color: #f97316;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-change {
+            font-size: 0.875rem;
+            color: #10b981;
+        }
+
+        .stat-change.negative {
+            color: #ef4444;
+        }
+
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .action-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .action-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .action-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .action-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .action-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin: 0;
+        }
+
+        .action-description {
+            color: #6b7280;
+            font-size: 0.875rem;
+            margin: 0;
+        }
+
+        .recent-jobs {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+
+        .jobs-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .job-item {
+            padding: 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background: #f9fafb;
+            transition: all 0.3s ease;
+        }
+
+        .job-item:hover {
+            background: #f3f4f6;
+            border-color: #d1d5db;
+        }
+
+        .job-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 0.5rem;
+        }
+
+        .job-title {
+            font-weight: 600;
+            color: #1f2937;
+            margin: 0;
+        }
+
+        .job-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .job-status.active {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .job-status.inactive {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .job-meta {
+            display: flex;
+            gap: 1rem;
+            color: #6b7280;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .job-applications {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 0.5rem;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .applications-count {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .applications-count strong {
+            color: #1f2937;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #6b7280;
+        }
+
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .success {
+            background: #d1fae5;
+            color: #065f46;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div>
+                <h1>Dashboard Recruteur</h1>
+                <p style="color: #6b7280; margin-top: 0.5rem;">Gérez vos offres d'emploi et les candidatures</p>
+            </div>
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <div style="text-align: right;">
+                    <div id="user-name" style="font-weight: 600; color: #1f2937;">Recruteur</div>
+                    <div id="user-email" style="font-size: 0.875rem; color: #6b7280;">email@example.com</div>
+                </div>
+                <button onclick="logout()" style="padding: 0.5rem 1rem; background: #ef4444; color: white; border: none; border-radius: 8px; cursor: pointer;">
+                    Déconnexion
+                </button>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span class="stat-title">Mes offres</span>
+                    <div class="stat-icon blue">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                        </svg>
+                    </div>
+                </div>
+                <div class="stat-value" id="total-jobs">0</div>
+                <div class="stat-change">Offres publiées</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span class="stat-title">Candidatures</span>
+                    <div class="stat-icon green">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </div>
+                </div>
+                <div class="stat-value" id="total-applications">0</div>
+                <div class="stat-change">Total des candidatures</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span class="stat-title">En attente</span>
+                    <div class="stat-icon purple">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                    </div>
+                </div>
+                <div class="stat-value" id="pending-applications">0</div>
+                <div class="stat-change">Candidatures à traiter</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span class="stat-title">Acceptées</span>
+                    <div class="stat-icon orange">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                        </svg>
+                    </div>
+                </div>
+                <div class="stat-value" id="accepted-applications">0</div>
+                <div class="stat-change">Candidatures acceptées</div>
+            </div>
+        </div>
+
+        <div class="actions-grid">
+            <a href="create-job.html" class="action-card">
+                <div class="action-header">
+                    <div class="action-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="16"></line>
+                            <line x1="8" y1="12" x2="16" y2="12"></line>
+                        </svg>
+                    </div>
+                    <h3 class="action-title">Créer une offre</h3>
+                </div>
+                <p class="action-description">Publier une nouvelle offre d'emploi</p>
+            </a>
+
+            <a href="manage-jobs.html" class="action-card">
+                <div class="action-header">
+                    <div class="action-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                        </svg>
+                    </div>
+                    <h3 class="action-title">Gérer mes offres</h3>
+                </div>
+                <p class="action-description">Modifier ou supprimer vos offres</p>
+            </a>
+
+            <a href="applications.html" class="action-card">
+                <div class="action-header">
+                    <div class="action-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </div>
+                    <h3 class="action-title">Candidatures</h3>
+                </div>
+                <p class="action-description">Voir et gérer les candidatures</p>
+            </a>
+        </div>
+
+        <div class="recent-jobs">
+            <div class="section-header">
+                <h2 class="section-title">Mes offres récentes</h2>
+                <a href="manage-jobs.html" class="btn btn-secondary">Voir tout</a>
+            </div>
+            <div class="jobs-list" id="recent-jobs-list">
+                <div class="loading">Chargement de vos offres...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        let currentUser = null;
+        let stats = {
+            totalJobs: 0,
+            totalApplications: 0,
+            pendingApplications: 0,
+            acceptedApplications: 0
+        };
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+        });
+
+        // Vérifier l'authentification
+        function checkAuth() {
+            const token = localStorage.getItem('token');
+            const userStr = localStorage.getItem('user');
+            
+            if (!token || !userStr) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            try {
+                const user = JSON.parse(userStr);
+                currentUser = user;
+                
+                // Mettre à jour les infos utilisateur depuis la base de données
+                updateUserProfile(user);
+                
+                // Vérifier si l'utilisateur est un recruteur
+                if (user.role !== 'recruteur') {
+                    // Rediriger selon le rôle
+                    const dashboards = {
+                        'candidat': 'dashboard-candidat.html',
+                        'administrateur': 'dashboard-admin.html'
+                    };
+                    window.location.href = dashboards[user.role] || 'login.html';
+                    return;
+                }
+                
+                loadDashboardData();
+            } catch (error) {
+                console.error('Erreur d\'authentification:', error);
+                window.location.href = 'login.html';
+            }
+        }
+
+        // Mettre à jour le profil utilisateur depuis la base de données
+        async function updateUserProfile(user) {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`/api/users/${user.id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success) {
+                        // Mettre à jour les informations utilisateur
+                        currentUser = data.data;
+                        localStorage.setItem('user', JSON.stringify(currentUser));
+                        
+                        // Mettre à jour l'affichage
+                        document.getElementById('user-name').textContent = currentUser.nom || 'Recruteur';
+                        document.getElementById('user-email').textContent = currentUser.email;
+                    }
+                }
+            } catch (error) {
+                console.error('Erreur lors de la mise à jour du profil:', error);
+            }
+        }
+
+        // Charger les données du dashboard
+        async function loadDashboardData() {
+            try {
+                await Promise.all([
+                    loadStats(),
+                    loadRecentJobs()
+                ]);
+            } catch (error) {
+                console.error('Erreur lors du chargement des données:', error);
+                showMessage('Erreur lors du chargement des données', 'error');
+            }
+        }
+
+        // Charger les statistiques
+        async function loadStats() {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`/api/recruiter/stats/${currentUser.id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success) {
+                        stats = data.data;
+                        updateStatsDisplay();
+                    }
+                } else {
+                    console.error('Erreur lors du chargement des statistiques');
+                }
+            } catch (error) {
+                console.error('Erreur lors du chargement des statistiques:', error);
+            }
+        }
+
+        // Mettre à jour l'affichage des statistiques
+        function updateStatsDisplay() {
+            document.getElementById('total-jobs').textContent = stats.totalJobs || 0;
+            document.getElementById('total-applications').textContent = stats.totalApplications || 0;
+            document.getElementById('pending-applications').textContent = stats.pendingApplications || 0;
+            document.getElementById('accepted-applications').textContent = stats.acceptedApplications || 0;
+        }
+
+        // Charger les offres récentes
+        async function loadRecentJobs() {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`/api/jobs/recruiter/${currentUser.id}?limit=5`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success) {
+                        displayRecentJobs(data.data);
+                    }
+                } else {
+                    console.error('Erreur lors du chargement des offres récentes');
+                    document.getElementById('recent-jobs-list').innerHTML = 
+                        '<div class="error">Erreur lors du chargement des offres</div>';
+                }
+            } catch (error) {
+                console.error('Erreur lors du chargement des offres récentes:', error);
+                document.getElementById('recent-jobs-list').innerHTML = 
+                    '<div class="error">Erreur lors du chargement des offres</div>';
+            }
+        }
+
+        // Afficher les offres récentes
+        function displayRecentJobs(jobs) {
+            const jobsList = document.getElementById('recent-jobs-list');
+            
+            if (!jobs || jobs.length === 0) {
+                jobsList.innerHTML = `
+                    <div class="loading" style="text-align: center; padding: 2rem; color: #6b7280;">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin: 0 auto 1rem;">
+                            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                        </svg>
+                        <h3 style="font-size: 1.125rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem;">Aucune offre publiée</h3>
+                        <p style="color: #6b7280; margin-bottom: 1.5rem;">Commencez par créer votre première offre d'emploi</p>
+                        <a href="create-job.html" class="btn btn-primary">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="8" x2="12" y2="16"></line>
+                                <line x1="8" y1="12" x2="16" y2="12"></line>
+                            </svg>
+                            Créer une offre
+                        </a>
+                    </div>
+                `;
+                return;
+            }
+
+            jobsList.innerHTML = jobs.map(job => `
+                <div class="job-item" style="border: 1px solid #e5e7eb; border-radius: 12px; padding: 1.5rem; background: #f9fafb; transition: all 0.3s ease; margin-bottom: 1rem;">
+                    <div class="job-header" style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                        <div>
+                            <h3 class="job-title" style="font-size: 1.125rem; font-weight: 600; color: #1f2937; margin: 0 0 0.5rem 0;">${job.titre}</h3>
+                            <div class="job-meta" style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 0.5rem;">
+                                <span style="display: flex; align-items: center; gap: 0.25rem; font-size: 0.875rem; color: #6b7280;">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                                        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                                    </svg>
+                                    ${job.entreprise || 'Entreprise'}
+                                </span>
+                                <span style="display: flex; align-items: center; gap: 0.25rem; font-size: 0.875rem; color: #6b7280;">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                        <circle cx="12" cy="10" r="3"></circle>
+                                    </svg>
+                                    ${job.location || job.lieu || 'Lieu non spécifié'}
+                                </span>
+                                <span style="display: flex; align-items: center; gap: 0.25rem; font-size: 0.875rem; color: #6b7280;">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                                    </svg>
+                                    ${job.type_contrat || 'Type non spécifié'}
+                                </span>
+                            </div>
+                        </div>
+                        <span class="job-status ${job.status === 'active' ? 'active' : 'inactive'}" style="padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 500; ${job.status === 'active' ? 'background: #d1fae5; color: #065f46;' : 'background: #fee2e2; color: #991b1b;'}">
+                            ${job.status === 'active' ? 'Active' : 'Inactive'}
+                        </span>
+                    </div>
+                    <div class="job-applications" style="display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; border-top: 1px solid #e5e7eb;">
+                        <span class="applications-count" style="font-size: 0.875rem; color: #6b7280;">
+                            <strong>${job.applications_count || 0}</strong> candidature${(job.applications_count || 0) > 1 ? 's' : ''}
+                        </span>
+                        <div style="display: flex; gap: 0.5rem; align-items: center;">
+                            <span style="font-size: 0.875rem; color: #6b7280;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                                ${job.saved_count || 0} sauvegardée${(job.saved_count || 0) > 1 ? 's' : ''}
+                            </span>
+                            <a href="applications.html?job=${job.id}" class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                                Voir les candidatures
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Fonction de déconnexion
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = 'login.html';
+        }
+
+        // Afficher un message
+        function showMessage(message, type = 'info') {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = type;
+            messageDiv.textContent = message;
+            
+            const container = document.querySelector('.container');
+            container.insertBefore(messageDiv, container.firstChild);
+            
+            setTimeout(() => {
+                messageDiv.remove();
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

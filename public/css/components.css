@@ -1,0 +1,361 @@
+/* Composants supplémentaires pour l'interface RECRUTDNCS */
+
+/* Cards */
+.card {
+    background: white;
+    border-radius: 0.5rem;
+    box-shadow: var(--shadow-sm);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    transition: var(--transition);
+}
+
+.card:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.card-header {
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+}
+
+.card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--dark-color);
+    margin: 0;
+}
+
+.card-body {
+    color: #4b5563;
+}
+
+/* Job Cards */
+.job-card {
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    transition: var(--transition);
+}
+
+.job-card:hover {
+    border-color: var(--primary-color);
+    box-shadow: var(--shadow-md);
+}
+
+.job-card h3 {
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.job-card p {
+    margin-bottom: 0.5rem;
+    color: #6b7280;
+}
+
+.job-actions {
+    margin-top: 1rem;
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+/* Application Cards */
+.application-card {
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    transition: var(--transition);
+}
+
+.application-card:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.application-actions {
+    margin-top: 1rem;
+}
+
+.application-actions select {
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0.25rem;
+    background: white;
+}
+
+/* Contact Page */
+.contact-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    margin-top: 2rem;
+}
+
+.contact-info h2 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.contact-info p {
+    margin-bottom: 0.5rem;
+}
+
+.contact-form {
+    background: white;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    box-shadow: var(--shadow-md);
+}
+
+/* Profile Page */
+.profile-content {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.profile-form {
+    background: white;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    box-shadow: var(--shadow-md);
+}
+
+.profile-form h2 {
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+}
+
+/* Notifications */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 1rem 1.5rem;
+    border-radius: 0.5rem;
+    color: white;
+    font-weight: 500;
+    z-index: 9999;
+    animation: slideIn 0.3s ease-out;
+}
+
+.notification-success {
+    background: var(--secondary-color);
+}
+
+.notification-error {
+    background: var(--danger-color);
+}
+
+.notification-info {
+    background: var(--primary-color);
+}
+
+.notification-warning {
+    background: var(--warning-color);
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Links */
+.link-primary {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.link-primary:hover {
+    text-decoration: underline;
+}
+
+/* Loading states */
+.loading-spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border-color);
+    border-radius: 50%;
+    border-top-color: var(--primary-color);
+    animation: spin 1s linear infinite;
+}
+
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9998;
+}
+
+.loading-overlay .loading-spinner {
+    width: 40px;
+    height: 40px;
+    border-width: 4px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .contact-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    
+    .job-actions {
+        flex-direction: column;
+    }
+    
+    .job-actions .btn {
+        width: 100%;
+    }
+    
+    .notification {
+        right: 10px;
+        left: 10px;
+        text-align: center;
+    }
+}
+
+/* Form validation styles */
+.form-input.error {
+    border-color: var(--danger-color);
+}
+
+.form-input.success {
+    border-color: var(--secondary-color);
+}
+
+.form-error.show {
+    display: block;
+    color: var(--danger-color);
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+.form-success {
+    color: var(--secondary-color);
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+/* Empty states */
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #6b7280;
+}
+
+.empty-state-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+.empty-state h3 {
+    margin-bottom: 0.5rem;
+    color: var(--dark-color);
+}
+
+.empty-state p {
+    margin-bottom: 1.5rem;
+}
+
+/* Search and filters */
+.search-bar {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.search-input {
+    flex: 1;
+    min-width: 200px;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+}
+
+.filter-select {
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    background: white;
+    min-width: 150px;
+}
+
+/* Modal styles */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 0.5rem;
+    padding: 2rem;
+    max-width: 500px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.modal-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--dark-color);
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #6b7280;
+}
+
+.modal-close:hover {
+    color: var(--dark-color);
+}
+
+.modal-body {
+    margin-bottom: 1.5rem;
+}
+
+.modal-footer {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+}

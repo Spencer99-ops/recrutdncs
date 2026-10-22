@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Créer une offre - RecrutDNCS</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin: 0;
+        }
+
+        .header p {
+            color: #6b7280;
+            margin-top: 0.5rem;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: #f3f4f6;
+            border: none;
+            border-radius: 8px;
+            color: #374151;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: #e5e7eb;
+            transform: translateY(-2px);
+        }
+
+        .form-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+        }
+
+        .form-section h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .form-group label .required {
+            color: #ef4444;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-group .help-text {
+            font-size: 0.75rem;
+            color: #6b7280;
+            margin-top: 0.25rem;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            padding-top: 2rem;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 1px solid #fecaca;
+        }
+
+        .success {
+            background: #d1fae5;
+            color: #065f46;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 1px solid #a7f3d0;
+        }
+
+        .loading {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid #e5e7eb;
+            border-top: 2px solid #3b82f6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .preview-section {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .preview-title {
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+
+        .preview-content {
+            color: #4b5563;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .header {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div>
+                <h1>Créer une offre d'emploi</h1>
+                <p style="color: #6b7280; margin-top: 0.5rem;">Publiez une nouvelle offre pour attirer les meilleurs candidats</p>
+            </div>
+            <a href="dashboard-recruteur.html" class="back-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Retour
+            </a>
+        </div>
+
+        <div class="form-container">
+            <div id="message-container"></div>
+
+            <form id="create-job-form">
+                <div class="form-section">
+                    <h2>Informations générales</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="titre">Titre du poste <span class="required">*</span></label>
+                            <input type="text" id="titre" name="titre" required placeholder="Ex: Développeur Web Senior">
+                        </div>
+                        <div class="form-group">
+                            <label for="entreprise">Entreprise <span class="required">*</span></label>
+                            <input type="text" id="entreprise" name="entreprise" required placeholder="Ex: Tech Company">
+                        </div>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="lieu">Lieu <span class="required">*</span></label>
+                            <input type="text" id="lieu" name="lieu" required placeholder="Ex: Paris, France">
+                        </div>
+                        <div class="form-group">
+                            <label for="type_contrat">Type de contrat <span class="required">*</span></label>
+                            <select id="type_contrat" name="type_contrat" required>
+                                <option value="">Sélectionner...</option>
+                                <option value="CDI">CDI</option>
+                                <option value="CDD">CDD</option>
+                                <option value="Stage">Stage</option>
+                                <option value="Alternance">Alternance</option>
+                                <option value="Freelance">Freelance</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="salaire">Salaire</label>
+                        <input type="text" id="salaire" name="salaire" placeholder="Ex: 35 000-45 000">
+                        <div class="help-text">Indiquez une fourchette de salaire annuel ou mensuel</div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2>Description du poste</h2>
+                    <div class="form-group">
+                        <label for="description">Description détaillée <span class="required">*</span></label>
+                        <textarea id="description" name="description" required placeholder="Décrivez le poste, les missions, l'environnement de travail..."></textarea>
+                        <div class="help-text">Soyez précis pour attirer les bons candidats</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="exigences">Exigences et qualifications</label>
+                        <textarea id="exigences" name="exigences" placeholder="Listez les compétences, diplômes, expérience requise..."></textarea>
+                        <div class="help-text">Formation, expérience, compétences techniques, langues...</div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2>Détails additionnels</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="experience_requise">Expérience requise</label>
+                            <select id="experience_requise" name="experience_requise">
+                                <option value="">Non spécifié</option>
+                                <option value="0-1">Moins de 1 an</option>
+                                <option value="1-3">1-3 ans</option>
+                                <option value="3-5">3-5 ans</option>
+                                <option value="5+">Plus de 5 ans</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="niveau_etude">Niveau d'études minimum</label>
+                            <select id="niveau_etude" name="niveau_etude">
+                                <option value="">Non spécifié</option>
+                                <option value="Bac">Bac</option>
+                                <option value="Bac+2">Bac+2</option>
+                                <option value="Bac+3">Bac+3</option>
+                                <option value="Bac+4">Bac+4</option>
+                                <option value="Bac+5">Bac+5</option>
+                                <option value="Doctorat">Doctorat</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="avantages">Avantages</label>
+                        <textarea id="avantages" name="avantages" placeholder="Télétravail, horaires flexibles, mutuelle, tickets restaurant..."></textarea>
+                        <div class="help-text">Listez les avantages sociaux et autres bénéfices</div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="previewJob()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                        Aperçu
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="saveAsDraft()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                            <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                            <polyline points="7 3 7 8 15 8"></polyline>
+                        </svg>
+                        Brouillon
+                    </button>
+                    <button type="submit" class="btn btn-primary" id="submit-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 11l3 3L22 4"></path>
+                            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                        </svg>
+                        Publier l'offre
+                    </button>
+                </div>
+            </form>
+
+            <div class="preview-section" id="preview-section" style="display: none;">
+                <h3 class="preview-title">Aperçu de l'offre</h3>
+                <div class="preview-content" id="preview-content">
+                    <!-- L'aperçu sera généré ici -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        let currentUser = null;
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+        });
+
+        // Vérifier l'authentification
+        function checkAuth() {
+            const token = localStorage.getItem('token');
+            const userStr = localStorage.getItem('user');
+            
+            if (!token || !userStr) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            try {
+                const user = JSON.parse(userStr);
+                currentUser = user;
+                
+                // Vérifier si l'utilisateur est un recruteur
+                if (user.role !== 'recruteur') {
+                    // Rediriger selon le rôle
+                    const dashboards = {
+                        'candidat': 'dashboard-candidat.html',
+                        'administrateur': 'dashboard-admin.html'
+                    };
+                    window.location.href = dashboards[user.role] || 'login.html';
+                    return;
+                }
+            } catch (error) {
+                console.error('Erreur d\'authentification:', error);
+                window.location.href = 'login.html';
+            }
+        }
+
+        // Soumettre le formulaire
+        document.getElementById('create-job-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submit-btn');
+            const originalText = submitBtn.innerHTML;
+            
+            // Désactiver le bouton et afficher le chargement
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    Publication en cours...
+                </div>
+            `;
+
+            try {
+                const token = localStorage.getItem('token');
+                const formData = {
+                    titre: document.getElementById('titre').value,
+                    entreprise: document.getElementById('entreprise').value,
+                    lieu: document.getElementById('lieu').value,
+                    type_contrat: document.getElementById('type_contrat').value,
+                    salaire: document.getElementById('salaire').value,
+                    description: document.getElementById('description').value,
+                    exigences: document.getElementById('exigences').value,
+                    experience_requise: document.getElementById('experience_requise').value,
+                    niveau_etude: document.getElementById('niveau_etude').value,
+                    avantages: document.getElementById('avantages').value,
+                    recruteur_id: currentUser.id
+                };
+
+                const response = await fetch('/api/jobs', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    showMessage('Offre publiée avec succès ! Redirection...', 'success');
+                    
+                    // Rediriger vers la page de gestion des offres après 2 secondes
+                    setTimeout(() => {
+                        window.location.href = 'manage-jobs.html';
+                    }, 2000);
+                } else {
+                    showMessage(data.message || 'Erreur lors de la publication de l\'offre', 'error');
+                }
+            } catch (error) {
+                console.error('Erreur lors de la publication:', error);
+                showMessage('Erreur lors de la publication de l\'offre', 'error');
+            } finally {
+                // Réactiver le bouton
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+            }
+        });
+
+        // Aperçu de l'offre
+        function previewJob() {
+            const formData = {
+                titre: document.getElementById('titre').value,
+                entreprise: document.getElementById('entreprise').value,
+                lieu: document.getElementById('lieu').value,
+                type_contrat: document.getElementById('type_contrat').value,
+                salaire: document.getElementById('salaire').value,
+                description: document.getElementById('description').value,
+                exigences: document.getElementById('exigences').value,
+                experience_requise: document.getElementById('experience_requise').value,
+                niveau_etude: document.getElementById('niveau_etude').value,
+                avantages: document.getElementById('avantages').value
+            };
+
+            const previewContent = document.getElementById('preview-content');
+            
+            if (!formData.titre || !formData.entreprise || !formData.lieu || !formData.type_contrat || !formData.description) {
+                showMessage('Veuillez remplir les champs obligatoires pour voir l\'aperçu', 'error');
+                return;
+            }
+
+            previewContent.innerHTML = `
+                <h4 style="color: #1f2937; margin-bottom: 1rem;">${formData.titre}</h4>
+                <div style="display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap;">
+                    <span style="background: #e5e7eb; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem;">
+                        ${formData.entreprise}
+                    </span>
+                    <span style="background: #e5e7eb; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem;">
+                        ${formData.lieu}
+                    </span>
+                    <span style="background: #3b82f6; color: white; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem;">
+                        ${formData.type_contrat}
+                    </span>
+                    ${formData.salaire ? `
+                        <span style="background: #10b981; color: white; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem;">
+                            ${formData.salaire}
+                        </span>
+                    ` : ''}
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <h5 style="color: #1f2937; margin-bottom: 0.5rem;">Description</h5>
+                    <p style="color: #4b5563; line-height: 1.5;">${formData.description}</p>
+                </div>
+                ${formData.exigences ? `
+                    <div style="margin-bottom: 1rem;">
+                        <h5 style="color: #1f2937; margin-bottom: 0.5rem;">Exigences</h5>
+                        <p style="color: #4b5563; line-height: 1.5;">${formData.exigences}</p>
+                    </div>
+                ` : ''}
+                ${formData.avantages ? `
+                    <div style="margin-bottom: 1rem;">
+                        <h5 style="color: #1f2937; margin-bottom: 0.5rem;">Avantages</h5>
+                        <p style="color: #4b5563; line-height: 1.5;">${formData.avantages}</p>
+                    </div>
+                ` : ''}
+                <div style="display: flex; gap: 1rem; margin-top: 1rem; font-size: 0.875rem; color: #6b7280;">
+                    ${formData.experience_requise ? `<span>Expérience: ${formData.experience_requise}</span>` : ''}
+                    ${formData.niveau_etude ? `<span>Études: ${formData.niveau_etude}</span>` : ''}
+                </div>
+            `;
+
+            document.getElementById('preview-section').style.display = 'block';
+            
+            // Scroller vers l'aperçu
+            document.getElementById('preview-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Sauvegarder comme brouillon
+        function saveAsDraft() {
+            const formData = {
+                titre: document.getElementById('titre').value,
+                entreprise: document.getElementById('entreprise').value,
+                lieu: document.getElementById('lieu').value,
+                type_contrat: document.getElementById('type_contrat').value,
+                salaire: document.getElementById('salaire').value,
+                description: document.getElementById('description').value,
+                exigences: document.getElementById('exigences').value,
+                experience_requise: document.getElementById('experience_requise').value,
+                niveau_etude: document.getElementById('niveau_etude').value,
+                avantages: document.getElementById('avantages').value
+            };
+
+            // Sauvegarder dans localStorage
+            localStorage.setItem('jobDraft', JSON.stringify(formData));
+            
+            showMessage('Brouillon sauvegardé avec succès', 'success');
+        }
+
+        // Charger le brouillon sauvegardé
+        function loadDraft() {
+            const draft = localStorage.getItem('jobDraft');
+            if (draft) {
+                const formData = JSON.parse(draft);
+                
+                document.getElementById('titre').value = formData.titre || '';
+                document.getElementById('entreprise').value = formData.entreprise || '';
+                document.getElementById('lieu').value = formData.lieu || '';
+                document.getElementById('type_contrat').value = formData.type_contrat || '';
+                document.getElementById('salaire').value = formData.salaire || '';
+                document.getElementById('description').value = formData.description || '';
+                document.getElementById('exigences').value = formData.exigences || '';
+                document.getElementById('experience_requise').value = formData.experience_requise || '';
+                document.getElementById('niveau_etude').value = formData.niveau_etude || '';
+                document.getElementById('avantages').value = formData.avantages || '';
+                
+                showMessage('Brouillon chargé avec succès', 'success');
+            }
+        }
+
+        // Afficher un message
+        function showMessage(message, type = 'info') {
+            const messageContainer = document.getElementById('message-container');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = type;
+            messageDiv.textContent = message;
+            
+            messageContainer.appendChild(messageDiv);
+            
+            setTimeout(() => {
+                messageDiv.remove();
+            }, 5000);
+        }
+
+        // Charger le brouillon au chargement de la page
+        loadDraft();
+    </script>
+</body>
+</html>

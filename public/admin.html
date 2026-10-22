@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administration - RECRUTDNCS</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header professionnel -->
+    <header id="main-header" class="main-header">
+        <div class="header-container">
+            <div class="header-brand">
+                <div class="brand-logo">
+                    <span class="brand-text">RECRUTDNCS</span>
+                    <div class="brand-accent"></div>
+                </div>
+            </div>
+            
+            <nav class="header-nav">
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a href="/" class="nav-link">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                            </svg>
+                            <span>Accueil</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="dashboard.html" class="nav-link">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="14" width="7" height="7"></rect>
+                                <rect x="3" y="14" width="7" height="7"></rect>
+                            </svg>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="header-actions">
+                <div class="user-info">
+                    <span id="user-name" class="user-name">Administrateur</span>
+                    <span id="user-role" class="user-role">Admin</span>
+                </div>
+                <button id="logout-btn" class="btn btn-outline">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                    Déconnexion
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contenu principal -->
+    <main class="main-content">
+        <div class="admin-container">
+            <div class="admin-header">
+                <h1>Administration</h1>
+                <p>Gestion complète de la plateforme RECRUTDNCS</p>
+            </div>
+
+            <!-- Statistiques -->
+            <div class="stats-section">
+                <h2>Statistiques générales</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="total-users">0</h3>
+                            <p>Utilisateurs</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                            </svg>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="total-jobs">0</h3>
+                            <p>Offres d'emploi</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                            </svg>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="total-applications">0</h3>
+                            <p>Candidatures</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Onglets de gestion -->
+            <div class="admin-tabs">
+                <div class="tabs-header">
+                    <button class="tab-btn active" data-tab="users">Utilisateurs</button>
+                    <button class="tab-btn" data-tab="jobs">Offres</button>
+                    <button class="tab-btn" data-tab="applications">Candidatures</button>
+                </div>
+
+                <!-- Onglet Utilisateurs -->
+                <div id="users-tab" class="tab-content active">
+                    <div class="tab-header">
+                        <h3>Gestion des utilisateurs</h3>
+                        <div class="tab-actions">
+                            <input type="text" id="user-search" placeholder="Rechercher un utilisateur...">
+                            <button id="refresh-users" class="btn btn-outline">Actualiser</button>
+                        </div>
+                    </div>
+                    <div class="users-list">
+                        <div class="loading">Chargement des utilisateurs...</div>
+                    </div>
+                </div>
+
+                <!-- Onglet Offres -->
+                <div id="jobs-tab" class="tab-content">
+                    <div class="tab-header">
+                        <h3>Gestion des offres</h3>
+                        <div class="tab-actions">
+                            <input type="text" id="job-search" placeholder="Rechercher une offre...">
+                            <button id="refresh-jobs" class="btn btn-outline">Actualiser</button>
+                        </div>
+                    </div>
+                    <div class="jobs-list">
+                        <div class="loading">Chargement des offres...</div>
+                    </div>
+                </div>
+
+                <!-- Onglet Candidatures -->
+                <div id="applications-tab" class="tab-content">
+                    <div class="tab-header">
+                        <h3>Gestion des candidatures</h3>
+                        <div class="tab-actions">
+                            <select id="application-filter">
+                                <option value="">Toutes les candidatures</option>
+                                <option value="en_attente">En attente</option>
+                                <option value="entretien">Entretien</option>
+                                <option value="refuse">Refusé</option>
+                            </select>
+                            <button id="refresh-applications" class="btn btn-outline">Actualiser</button>
+                        </div>
+                    </div>
+                    <div class="applications-list">
+                        <div class="loading">Chargement des candidatures...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="js/app.js"></script>
+    <script>
+        // Classe pour gérer l'administration
+        class AdminManager {
+            constructor() {
+                this.app = new RecrutDNCS();
+                this.users = [];
+                this.jobs = [];
+                this.applications = [];
+                this.currentTab = 'users';
+                this.init();
+            }
+
+            async init() {
+                // Attendre que l'application soit initialisée
+                setTimeout(() => {
+                    this.setupEventListeners();
+                    this.loadStats();
+                    this.loadUsers();
+                    this.setupTabs();
+                }, 500);
+            }
+
+            setupEventListeners() {
+                // Recherche et filtres
+                document.getElementById('user-search').addEventListener('input', (e) => this.filterUsers(e.target.value));
+                document.getElementById('job-search').addEventListener('input', (e) => this.filterJobs(e.target.value));
+                document.getElementById('application-filter').addEventListener('change', (e) => this.filterApplications(e.target.value));
+                
+                // Boutons d'actualisation
+                document.getElementById('refresh-users').addEventListener('click', () => this.loadUsers());
+                document.getElementById('refresh-jobs').addEventListener('click', () => this.loadJobs());
+                document.getElementById('refresh-applications').addEventListener('click', () => this.loadApplications());
+                
+                // Déconnexion
+                const logoutBtn = document.getElementById('logout-btn');
+                if (logoutBtn) {
+                    logoutBtn.addEventListener('click', () => this.app.logout());
+                }
+            }
+
+            setupTabs() {
+                const tabButtons = document.querySelectorAll('.tab-btn');
+                tabButtons.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const tab = btn.dataset.tab;
+                        this.switchTab(tab);
+                    });
+                });
+            }
+
+            switchTab(tabName) {
+                // Masquer tous les onglets
+                document.querySelectorAll('.tab-content').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                document.querySelectorAll('.tab-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                
+                // Afficher l'onglet sélectionné
+                document.getElementById(`${tabName}-tab`).classList.add('active');
+                document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+                
+                this.currentTab = tabName;
+                
+                // Charger les données de l'onglet
+                switch(tabName) {
+                    case 'users':
+                        this.loadUsers();
+                        break;
+                    case 'jobs':
+                        this.loadJobs();
+                        break;
+                    case 'applications':
+                        this.loadApplications();
+                        break;
+                }
+            }
+
+            async loadStats() {
+                try {
+                    const response = await this.app.apiRequest('/admin/stats', 'GET');
+                    const stats = response.data;
+                    
+                    document.getElementById('total-users').textContent = stats.users.total;
+                    document.getElementById('total-jobs').textContent = stats.jobs.total_jobs;
+                    document.getElementById('total-applications').textContent = stats.applications.total;
+                } catch (error) {
+                    console.error('Erreur lors du chargement des statistiques:', error);
+                }
+            }
+
+            async loadUsers() {
+                try {
+                    const response = await this.app.apiRequest('/admin/users', 'GET');
+                    this.users = response.data.users;
+                    this.renderUsers();
+                } catch (error) {
+                    console.error('Erreur lors du chargement des utilisateurs:', error);
+                    document.querySelector('.users-list').innerHTML = '<div class="error">Erreur lors du chargement</div>';
+                }
+            }
+
+            async loadJobs() {
+                try {
+                    const response = await this.app.apiRequest('/admin/jobs', 'GET');
+                    this.jobs = response.data.jobs;
+                    this.renderJobs();
+                } catch (error) {
+                    console.error('Erreur lors du chargement des offres:', error);
+                    document.querySelector('.jobs-list').innerHTML = '<div class="error">Erreur lors du chargement</div>';
+                }
+            }
+
+            async loadApplications() {
+                try {
+                    const response = await this.app.apiRequest('/admin/applications', 'GET');
+                    this.applications = response.data.applications;
+                    this.renderApplications();
+                } catch (error) {
+                    console.error('Erreur lors du chargement des candidatures:', error);
+                    document.querySelector('.applications-list').innerHTML = '<div class="error">Erreur lors du chargement</div>';
+                }
+            }
+
+            renderUsers() {
+                const container = document.querySelector('.users-list');
+                
+                if (this.users.length === 0) {
+                    container.innerHTML = '<div class="no-results">Aucun utilisateur trouvé</div>';
+                    return;
+                }
+
+                container.innerHTML = this.users.map(user => `
+                    <div class="user-card">
+                        <div class="user-info">
+                            <div class="user-avatar">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                            </div>
+                            <div class="user-details">
+                                <h4>${user.nom}</h4>
+                                <p>${user.email}</p>
+                                <span class="user-role-badge role-${user.role}">${user.role}</span>
+                            </div>
+                        </div>
+                        <div class="user-meta">
+                            <span>Inscrit le ${new Date(user.created_at).toLocaleDateString('fr-FR')}</span>
+                            ${user.telephone ? `<span>${user.telephone}</span>` : ''}
+                        </div>
+                        <div class="user-actions">
+                            ${user.id !== this.app.currentUser.id ? `
+                                <button class="btn btn-danger" onclick="adminManager.deleteUser(${user.id}, '${user.email}')">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="3 6 5 6 21 6"></polyline>
+                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                    </svg>
+                                    Supprimer
+                                </button>
+                            ` : '<span class="current-user">Vous</span>'}
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            renderJobs() {
+                const container = document.querySelector('.jobs-list');
+                
+                if (this.jobs.length === 0) {
+                    container.innerHTML = '<div class="no-results">Aucune offre trouvée</div>';
+                    return;
+                }
+
+                container.innerHTML = this.jobs.map(job => `
+                    <div class="job-card">
+                        <div class="job-header">
+                            <h3>${job.titre}</h3>
+                            <span class="job-type">${job.type_contrat}</span>
+                        </div>
+                        <div class="job-info">
+                            <div class="job-company">${job.entreprise}</div>
+                            <div class="job-location">${job.ville}</div>
+                            <div class="job-recruiter">Par ${job.recruteur_nom}</div>
+                        </div>
+                        <div class="job-actions">
+                            <button class="btn btn-danger" onclick="adminManager.deleteJob(${job.id}, '${job.titre}')">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="3 6 5 6 21 6"></polyline>
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                </svg>
+                                Supprimer
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            renderApplications() {
+                const container = document.querySelector('.applications-list');
+                
+                if (this.applications.length === 0) {
+                    container.innerHTML = '<div class="no-results">Aucune candidature trouvée</div>';
+                    return;
+                }
+
+                container.innerHTML = this.applications.map(app => `
+                    <div class="application-card">
+                        <div class="application-header">
+                            <h3>${app.job_titre}</h3>
+                            <span class="application-status ${this.getStatusClass(app.statut)}">${this.getStatusLabel(app.statut)}</span>
+                        </div>
+                        <div class="application-info">
+                            <div class="application-candidate">${app.candidat_nom}</div>
+                            <div class="application-company">${app.entreprise}</div>
+                            <div class="application-date">${new Date(app.created_at).toLocaleDateString('fr-FR')}</div>
+                        </div>
+                        <div class="application-actions">
+                            <button class="btn btn-danger" onclick="adminManager.deleteApplication(${app.id}, '${app.job_titre}')">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="3 6 5 6 21 6"></polyline>
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                </svg>
+                                Supprimer
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            filterUsers(searchTerm) {
+                const filtered = this.users.filter(user => 
+                    user.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    user.email.toLowerCase().includes(searchTerm.toLowerCase())
+                );
+                this.renderFilteredUsers(filtered);
+            }
+
+            filterJobs(searchTerm) {
+                const filtered = this.jobs.filter(job => 
+                    job.titre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    job.entreprise.toLowerCase().includes(searchTerm.toLowerCase())
+                );
+                this.renderFilteredJobs(filtered);
+            }
+
+            filterApplications(status) {
+                if (!status) {
+                    this.renderApplications();
+                    return;
+                }
+                const filtered = this.applications.filter(app => app.statut === status);
+                this.renderFilteredApplications(filtered);
+            }
+
+            renderFilteredUsers(users) {
+                const originalUsers = this.users;
+                this.users = users;
+                this.renderUsers();
+                this.users = originalUsers;
+            }
+
+            renderFilteredJobs(jobs) {
+                const originalJobs = this.jobs;
+                this.jobs = jobs;
+                this.renderJobs();
+                this.jobs = originalJobs;
+            }
+
+            renderFilteredApplications(applications) {
+                const originalApplications = this.applications;
+                this.applications = applications;
+                this.renderApplications();
+                this.applications = originalApplications;
+            }
+
+            async deleteUser(userId, userEmail) {
+                if (confirm(`Êtes-vous sûr de vouloir supprimer l'utilisateur ${userEmail} ?`)) {
+                    try {
+                        await this.app.apiRequest(`/admin/users/${userId}`, 'DELETE');
+                        this.app.showNotification('Utilisateur supprimé avec succès', 'success');
+                        this.loadUsers();
+                        this.loadStats();
+                    } catch (error) {
+                        this.app.showNotification('Erreur lors de la suppression', 'error');
+                    }
+                }
+            }
+
+            async deleteJob(jobId, jobTitle) {
+                if (confirm(`Êtes-vous sûr de vouloir supprimer l'offre "${jobTitle}" ?`)) {
+                    try {
+                        await this.app.apiRequest(`/admin/jobs/${jobId}`, 'DELETE');
+                        this.app.showNotification('Offre supprimée avec succès', 'success');
+                        this.loadJobs();
+                        this.loadStats();
+                    } catch (error) {
+                        this.app.showNotification('Erreur lors de la suppression', 'error');
+                    }
+                }
+            }
+
+            async deleteApplication(applicationId, jobTitle) {
+                if (confirm(`Êtes-vous sûr de vouloir supprimer la candidature pour "${jobTitle}" ?`)) {
+                    try {
+                        await this.app.apiRequest(`/admin/applications/${applicationId}`, 'DELETE');
+                        this.app.showNotification('Candidature supprimée avec succès', 'success');
+                        this.loadApplications();
+                        this.loadStats();
+                    } catch (error) {
+                        this.app.showNotification('Erreur lors de la suppression', 'error');
+                    }
+                }
+            }
+
+            getStatusClass(status) {
+                switch(status?.toLowerCase()) {
+                    case 'en_attente': return 'status-pending';
+                    case 'entretien': return 'status-interview';
+                    case 'refuse': return 'status-rejected';
+                    default: return 'status-unknown';
+                }
+            }
+
+            getStatusLabel(status) {
+                switch(status?.toLowerCase()) {
+                    case 'en_attente': return 'En attente';
+                    case 'entretien': return 'Entretien';
+                    case 'refuse': return 'Refusé';
+                    default: return status || 'Inconnu';
+                }
+            }
+        }
+
+        // Initialiser le gestionnaire d'administration
+        const adminManager = new AdminManager();
+    </script>
+
+    <script src="js/api.js"></script>
+    <script src="js/admin-api.js"></script>
+</body></body>
+</html>

@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Utilisateurs - RECRUTDNCS</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            min-height: 100vh;
+            color: #e2e8f0;
+        }
+
+        .admin-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .admin-header {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            padding: 2rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(239, 68, 68, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .admin-header h1 {
+            margin: 0;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .admin-header p {
+            margin: 0.5rem 0 0 0;
+            opacity: 0.9;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .users-controls {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 300px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+            color: #1f2937;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #ef4444;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+        }
+
+        .search-box svg {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            color: #6b7280;
+        }
+
+        .filter-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .filter-controls select {
+            padding: 0.75rem 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            background: white;
+            color: #1f2937;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-controls select:focus {
+            outline: none;
+            border-color: #ef4444;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #6b7280, #4b5563);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(107, 114, 128, 0.3);
+        }
+
+        .users-grid {
+            display: grid;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .user-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .user-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .user-card.role-candidat {
+            border-left-color: #3b82f6;
+        }
+
+        .user-card.role-recruteur {
+            border-left-color: #f59e0b;
+        }
+
+        .user-card.role-administrateur {
+            border-left-color: #ef4444;
+        }
+
+        .user-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        .user-details h3 {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .user-details p {
+            margin: 0.25rem 0 0 0;
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        .user-role {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .role-candidat {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .role-recruteur {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .role-administrateur {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .user-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        .meta-item svg {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .page-info {
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #ef4444;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: #6b7280;
+            font-size: 1.1rem;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 3rem;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            color: #6b7280;
+        }
+
+        .no-results svg {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 1.3rem;
+            color: #1f2937;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            padding: 0.5rem;
+            cursor: pointer;
+            color: #6b7280;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #ef4444;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: flex-end;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .admin-container {
+                padding: 1rem;
+            }
+
+            .admin-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+
+            .users-controls {
+                flex-direction: column;
+            }
+
+            .search-box {
+                min-width: 100%;
+            }
+
+            .filter-controls {
+                width: 100%;
+                justify-content: stretch;
+            }
+
+            .filter-controls select {
+                flex: 1;
+            }
+
+            .user-meta {
+                grid-template-columns: 1fr;
+            }
+
+            .user-actions {
+                justify-content: stretch;
+            }
+
+            .user-actions .btn {
+                flex: 1;
+                justify-content: center;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .user-card {
+            animation: fadeIn 0.5s ease;
+        }
+
+        .user-card:nth-child(1) { animation-delay: 0.1s; }
+        .user-card:nth-child(2) { animation-delay: 0.2s; }
+        .user-card:nth-child(3) { animation-delay: 0.3s; }
+        .user-card:nth-child(4) { animation-delay: 0.4s; }
+        .user-card:nth-child(5) { animation-delay: 0.5s; }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="admin-header">
+            <div>
+                <h1>Gestion des Utilisateurs</h1>
+                <p>Administrez tous les utilisateurs de la plateforme</p>
+            </div>
+            <a href="dashboard-admin.html" class="back-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Retour au Dashboard
+            </a>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="total-users">0</div>
+                <div class="stat-label">Total Utilisateurs</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="candidats-count">0</div>
+                <div class="stat-label">Candidats</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="recruteurs-count">0</div>
+                <div class="stat-label">Recruteurs</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="admins-count">0</div>
+                <div class="stat-label">Administrateurs</div>
+            </div>
+        </div>
+
+        <div class="users-controls">
+            <div class="search-box">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.35-4.35"></path>
+                </svg>
+                <input type="text" id="search-input" placeholder="Rechercher un utilisateur...">
+            </div>
+            <div class="filter-controls">
+                <select id="role-filter">
+                    <option value="">Tous les rôles</option>
+                    <option value="candidat">Candidats</option>
+                    <option value="recruteur">Recruteurs</option>
+                    <option value="administrateur">Administrateurs</option>
+                </select>
+                <select id="status-filter">
+                    <option value="">Tous les statuts</option>
+                    <option value="active">Actifs</option>
+                    <option value="inactive">Inactifs</option>
+                    <option value="suspended">Suspendus</option>
+                </select>
+                <button class="btn btn-primary" onclick="userManager.addUser()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    Ajouter
+                </button>
+            </div>
+        </div>
+
+        <div id="users-list" class="users-grid">
+            <div class="loading">Chargement des utilisateurs...</div>
+        </div>
+
+        <div id="pagination" class="pagination" style="display: none;">
+            <button id="prev-page" class="btn btn-secondary">Précédent</button>
+            <span id="page-info">Page 1 sur 1</span>
+            <button id="next-page" class="btn btn-secondary">Suivant</button>
+        </div>
+    </div>
+
+    <!-- Modal pour ajouter/modifier un utilisateur -->
+    <div id="user-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Ajouter un utilisateur</h2>
+                <button id="close-modal" class="modal-close">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <form id="user-form">
+                <div class="form-group">
+                    <label for="user-name">Nom complet</label>
+                    <input type="text" id="user-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="user-email">Email</label>
+                    <input type="email" id="user-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="user-telephone">Téléphone</label>
+                    <input type="tel" id="user-telephone">
+                </div>
+                <div class="form-group">
+                    <label for="user-role">Rôle</label>
+                    <select id="user-role" required>
+                        <option value="">Sélectionner...</option>
+                        <option value="candidat">Candidat</option>
+                        <option value="recruteur">Recruteur</option>
+                        <option value="administrateur">Administrateur</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="user-password">Mot de passe</label>
+                    <input type="password" id="user-password">
+                </div>
+                <div class="form-actions">
+                    <button type="button" id="cancel-btn" class="btn btn-secondary">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        class UsersManager {
+            constructor() {
+                this.users = [];
+                this.filteredUsers = [];
+                this.currentPage = 1;
+                this.itemsPerPage = 12;
+                this.currentUserId = null;
+                this.apiBase = 'http://localhost:3000/api';
+                this.token = localStorage.getItem('token');
+                this.currentUser = null;
+                
+                this.init();
+            }
+
+            init() {
+                this.checkAuth();
+                this.bindEvents();
+                this.loadUsers();
+            }
+
+            checkAuth() {
+                const token = localStorage.getItem('token');
+                const userStr = localStorage.getItem('user');
+                
+                if (!token || !userStr) {
+                    this.redirectToLogin();
+                    return;
+                }
+                
+                try {
+                    this.currentUser = JSON.parse(userStr);
+                    if (this.currentUser.role !== 'administrateur') {
+                        this.redirectToDashboard();
+                        return;
+                    }
+                } catch (error) {
+                    console.error('Erreur lors de la lecture des données utilisateur:', error);
+                    this.logout();
+                }
+            }
+
+            bindEvents() {
+                // Recherche et filtres
+                document.getElementById('search-input').addEventListener('input', () => this.filterUsers());
+                document.getElementById('role-filter').addEventListener('change', () => this.filterUsers());
+                document.getElementById('status-filter').addEventListener('change', () => this.filterUsers());
+                
+                // Modal
+                document.getElementById('close-modal').addEventListener('click', () => this.hideModal());
+                document.getElementById('cancel-btn').addEventListener('click', () => this.hideModal());
+                document.getElementById('user-form').addEventListener('submit', (e) => this.handleUserSubmit(e));
+                
+                // Pagination
+                document.getElementById('prev-page').addEventListener('click', () => this.changePage(-1));
+                document.getElementById('next-page').addEventListener('click', () => this.changePage(1));
+                
+                // Fermer la modal en cliquant à l'extérieur
+                document.getElementById('user-modal').addEventListener('click', (e) => {
+                    if (e.target.id === 'user-modal') {
+                        this.hideModal();
+                    }
+                });
+            }
+
+            async loadUsers() {
+                this.showLoading();
+                
+                try {
+                    const token = localStorage.getItem('token');
+                    const response = await fetch('/api/admin/users?limit=100', {
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (data.success && data.data) {
+                            this.users = data.data.users;
+                            this.filteredUsers = [...this.users];
+                            this.renderUsers();
+                            this.updateStats();
+                        } else {
+                            throw new Error(data.message || 'Erreur lors du chargement');
+                        }
+                    } else {
+                        throw new Error('Erreur serveur');
+                    }
+                } catch (error) {
+                    console.error('Erreur lors du chargement des utilisateurs:', error);
+                    this.showError('Erreur lors du chargement des utilisateurs');
+                }
+            }
+
+            getMockUsers() {
+                return [
+                    {
+                        id: 1,
+                        nom: 'Marie Dupont',
+                        email: 'marie.dupont@email.com',
+                        telephone: '06 12 34 56 78',
+                        role: 'candidat',
+                        created_at: '2024-01-15T10:30:00Z',
+                        last_login: '2024-01-20T14:25:00Z',
+                        status: 'active'
+                    },
+                    {
+                        id: 2,
+                        nom: 'Tech Solutions',
+                        email: 'contact@techsolutions.com',
+                        telephone: '01 23 45 67 89',
+                        role: 'recruteur',
+                        created_at: '2024-01-10T09:15:00Z',
+                        last_login: '2024-01-19T16:40:00Z',
+                        status: 'active'
+                    },
+                    {
+                        id: 3,
+                        nom: 'Jean Martin',
+                        email: 'jean.martin@email.com',
+                        telephone: '06 98 76 54 32',
+                        role: 'candidat',
+                        created_at: '2024-01-08T11:20:00Z',
+                        last_login: '2024-01-18T10:15:00Z',
+                        status: 'active'
+                    },
+                    {
+                        id: 4,
+                        nom: 'Pierre Durand',
+                        email: 'pierre.durand@email.com',
+                        telephone: '06 11 22 33 44',
+                        role: 'candidat',
+                        created_at: '2024-01-05T14:30:00Z',
+                        last_login: '2024-01-17T09:45:00Z',
+                        status: 'inactive'
+                    },
+                    {
+                        id: 5,
+                        nom: 'Digital Agency',
+                        email: 'hr@digitalagency.com',
+                        telephone: '01 98 76 54 32',
+                        role: 'recruteur',
+                        created_at: '2024-01-03T16:20:00Z',
+                        last_login: '2024-01-16T13:30:00Z',
+                        status: 'active'
+                    },
+                    {
+                        id: 6,
+                        nom: 'Sophie Bernard',
+                        email: 'sophie.bernard@email.com',
+                        telephone: '06 55 44 33 22',
+                        role: 'candidat',
+                        created_at: '2024-01-02T10:45:00Z',
+                        last_login: '2024-01-15T15:20:00Z',
+                        status: 'active'
+                    },
+                    {
+                        id: 7,
+                        nom: 'Admin System',
+                        email: 'admin@recrutdncs.com',
+                        telephone: '01 23 45 67 89',
+                        role: 'administrateur',
+                        created_at: '2024-01-01T00:00:00Z',
+                        last_login: '2024-01-20T18:00:00Z',
+                        status: 'active'
+                    },
+                    {
+                        id: 8,
+                        nom: 'Creative Studio',
+                        email: 'jobs@creativestudio.com',
+                        telephone: '01 76 54 32 10',
+                        role: 'recruteur',
+                        created_at: '2023-12-28T12:30:00Z',
+                        last_login: '2024-01-14T11:15:00Z',
+                        status: 'active'
+                    }
+                ];
+            }
+
+            renderUsers() {
+                const container = document.getElementById('users-list');
+                
+                if (this.filteredUsers.length === 0) {
+                    container.innerHTML = `
+                        <div class="no-results">
+                            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="8.5" cy="7" r="4"></circle>
+                                <line x1="20" y1="8" x2="20" y2="14"></line>
+                                <line x1="23" y1="11" x2="17" y2="11"></line>
+                            </svg>
+                            <h3>Aucun utilisateur trouvé</h3>
+                            <p>Aucun utilisateur ne correspond à vos critères de recherche.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+                const endIndex = startIndex + this.itemsPerPage;
+                const pageUsers = this.filteredUsers.slice(startIndex, endIndex);
+                
+                container.innerHTML = pageUsers.map(user => {
+                    const roleClass = `role-${user.role}`;
+                    const initials = user.nom.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+                    
+                    return `
+                        <div class="user-card ${roleClass}">
+                            <div class="user-header">
+                                <div class="user-info">
+                                    <div class="user-avatar">${initials}</div>
+                                    <div class="user-details">
+                                        <h3>${user.nom}</h3>
+                                        <p>${user.email}</p>
+                                    </div>
+                                </div>
+                                <span class="user-role ${roleClass}">${this.getRoleLabel(user.role)}</span>
+                            </div>
+                            <div class="user-meta">
+                                <div class="meta-item">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                                    </svg>
+                                    ${user.telephone || 'Non renseigné'}
+                                </div>
+                                <div class="meta-item">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                                    </svg>
+                                    Inscrit le ${new Date(user.created_at).toLocaleDateString('fr-FR')}
+                                </div>
+                                <div class="meta-item">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <polyline points="12,6 12,12 16,14"></polyline>
+                                    </svg>
+                                    Dernière connexion ${new Date(user.last_login).toLocaleDateString('fr-FR')}
+                                </div>
+                                <div class="meta-item">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                        <polyline points="22,4 12,14.01 9,11.01"></polyline>
+                                    </svg>
+                                    Statut: ${this.getStatusLabel(user.status)}
+                                </div>
+                            </div>
+                            <div class="user-actions">
+                                <button class="btn btn-secondary btn-sm" onclick="userManager.editUser(${user.id})">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                    </svg>
+                                    Modifier
+                                </button>
+                                ${user.status === 'active' ? `
+                                    <button class="btn btn-warning btn-sm" onclick="userManager.suspendUser(${user.id})">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <rect x="6" y="4" width="4" height="16"></rect>
+                                            <rect x="14" y="4" width="4" height="16"></rect>
+                                        </svg>
+                                        Suspendre
+                                    </button>
+                                ` : `
+                                    <button class="btn btn-success btn-sm" onclick="userManager.activateUser(${user.id})">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <polygon points="5,3 19,12 5,21"></polygon>
+                                        </svg>
+                                        Activer
+                                    </button>
+                                `}
+                                <button class="btn btn-danger btn-sm" onclick="userManager.deleteUser(${user.id})">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="3,6 5,6 21,6"></polyline>
+                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                    </svg>
+                                    Supprimer
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                this.updatePagination();
+            }
+
+            updateStats() {
+                const totalUsers = this.users.length;
+                const candidats = this.users.filter(u => u.role === 'candidat').length;
+                const recruteurs = this.users.filter(u => u.role === 'recruteur').length;
+                const admins = this.users.filter(u => u.role === 'administrateur').length;
+
+                document.getElementById('total-users').textContent = totalUsers;
+                document.getElementById('candidats-count').textContent = candidats;
+                document.getElementById('recruteurs-count').textContent = recruteurs;
+                document.getElementById('admins-count').textContent = admins;
+            }
+
+            updatePagination() {
+                const totalPages = Math.ceil(this.filteredUsers.length / this.itemsPerPage);
+                const pagination = document.getElementById('pagination');
+                const pageInfo = document.getElementById('page-info');
+                const prevBtn = document.getElementById('prev-page');
+                const nextBtn = document.getElementById('next-page');
+
+                if (totalPages <= 1) {
+                    pagination.style.display = 'none';
+                    return;
+                }
+
+                pagination.style.display = 'flex';
+                pageInfo.textContent = `Page ${this.currentPage} sur ${totalPages}`;
+                
+                prevBtn.disabled = this.currentPage === 1;
+                nextBtn.disabled = this.currentPage === totalPages;
+            }
+
+            changePage(direction) {
+                const totalPages = Math.ceil(this.filteredUsers.length / this.itemsPerPage);
+                const newPage = this.currentPage + direction;
+
+                if (newPage >= 1 && newPage <= totalPages) {
+                    this.currentPage = newPage;
+                    this.renderUsers();
+                }
+            }
+
+            filterUsers() {
+                const searchTerm = document.getElementById('search-input').value.toLowerCase();
+                const roleFilter = document.getElementById('role-filter').value;
+                const statusFilter = document.getElementById('status-filter').value;
+                
+                this.filteredUsers = this.users.filter(user => {
+                    if (searchTerm && !user.nom.toLowerCase().includes(searchTerm) && !user.email.toLowerCase().includes(searchTerm)) {
+                        return false;
+                    }
+                    if (roleFilter && user.role !== roleFilter) {
+                        return false;
+                    }
+                    if (statusFilter && user.status !== statusFilter) {
+                        return false;
+                    }
+                    return true;
+                });
+
+                this.currentPage = 1;
+                this.renderUsers();
+            }
+
+            getRoleLabel(role) {
+                const roleLabels = {
+                    'candidat': 'Candidat',
+                    'recruteur': 'Recruteur',
+                    'administrateur': 'Administrateur'
+                };
+                return roleLabels[role] || role;
+            }
+
+            getStatusLabel(status) {
+                const statusLabels = {
+                    'active': 'Actif',
+                    'inactive': 'Inactif',
+                    'suspended': 'Suspendu'
+                };
+                return statusLabels[status] || status;
+            }
+
+            addUser() {
+                this.currentUserId = null;
+                document.getElementById('modal-title').textContent = 'Ajouter un utilisateur';
+                document.getElementById('user-form').reset();
+                document.getElementById('user-password').required = true;
+                document.getElementById('user-modal').style.display = 'flex';
+            }
+
+            editUser(userId) {
+                const user = this.users.find(u => u.id === userId);
+                if (!user) return;
+
+                this.currentUserId = userId;
+                document.getElementById('modal-title').textContent = 'Modifier un utilisateur';
+                document.getElementById('user-name').value = user.nom;
+                document.getElementById('user-email').value = user.email;
+                document.getElementById('user-telephone').value = user.telephone || '';
+                document.getElementById('user-role').value = user.role;
+                document.getElementById('user-password').value = '';
+                document.getElementById('user-password').required = false;
+                document.getElementById('user-modal').style.display = 'flex';
+            }
+
+            hideModal() {
+                document.getElementById('user-modal').style.display = 'none';
+                this.currentUserId = null;
+            }
+
+            async handleUserSubmit(e) {
+                e.preventDefault();
+                
+                const formData = {
+                    nom: document.getElementById('user-name').value,
+                    email: document.getElementById('user-email').value,
+                    telephone: document.getElementById('user-telephone').value,
+                    role: document.getElementById('user-role').value
+                };
+
+                const password = document.getElementById('user-password').value;
+                if (password) {
+                    formData.password = password;
+                }
+
+                try {
+                    if (this.currentUserId) {
+                        // Modifier un utilisateur
+                        const userIndex = this.users.findIndex(u => u.id === this.currentUserId);
+                        if (userIndex !== -1) {
+                            this.users[userIndex] = { ...this.users[userIndex], ...formData };
+                        }
+                        this.showNotification('Utilisateur modifié avec succès', 'success');
+                    } else {
+                        // Ajouter un utilisateur
+                        const newUser = {
+                            id: Math.max(...this.users.map(u => u.id)) + 1,
+                            ...formData,
+                            created_at: new Date().toISOString(),
+                            last_login: new Date().toISOString(),
+                            status: 'active'
+                        };
+                        this.users.push(newUser);
+                        this.showNotification('Utilisateur ajouté avec succès', 'success');
+                    }
+                    
+                    this.hideModal();
+                    this.filterUsers();
+                    this.updateStats();
+                } catch (error) {
+                    console.error('Erreur lors de la sauvegarde de l\'utilisateur:', error);
+                    this.showNotification('Erreur lors de la sauvegarde', 'error');
+                }
+            }
+
+            async suspendUser(userId) {
+                if (!confirm('Êtes-vous sûr de vouloir suspendre cet utilisateur ?')) return;
+
+                try {
+                    const userIndex = this.users.findIndex(u => u.id === userId);
+                    if (userIndex !== -1) {
+                        this.users[userIndex].status = 'suspended';
+                        this.showNotification('Utilisateur suspendu', 'success');
+                        this.filterUsers();
+                        this.updateStats();
+                    }
+                } catch (error) {
+                    console.error('Erreur lors de la suspension de l\'utilisateur:', error);
+                    this.showNotification('Erreur lors de la suspension', 'error');
+                }
+            }
+
+            async activateUser(userId) {
+                try {
+                    const userIndex = this.users.findIndex(u => u.id === userId);
+                    if (userIndex !== -1) {
+                        this.users[userIndex].status = 'active';
+                        this.showNotification('Utilisateur activé', 'success');
+                        this.filterUsers();
+                        this.updateStats();
+                    }
+                } catch (error) {
+                    console.error('Erreur lors de l\'activation de l\'utilisateur:', error);
+                    this.showNotification('Erreur lors de l\'activation', 'error');
+                }
+            }
+
+            async deleteUser(userId) {
+                if (!confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ? Cette action est irréversible.')) return;
+
+                try {
+                    const userIndex = this.users.findIndex(u => u.id === userId);
+                    if (userIndex !== -1) {
+                        this.users.splice(userIndex, 1);
+                        this.showNotification('Utilisateur supprimé', 'success');
+                        this.filterUsers();
+                        this.updateStats();
+                    }
+                } catch (error) {
+                    console.error('Erreur lors de la suppression de l\'utilisateur:', error);
+                    this.showNotification('Erreur lors de la suppression', 'error');
+                }
+            }
+
+            showLoading() {
+                document.getElementById('users-list').innerHTML = '<div class="loading">Chargement des utilisateurs...</div>';
+            }
+
+            showError(message) {
+                document.getElementById('users-list').innerHTML = `
+                    <div class="no-results">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                        <h3>Erreur</h3>
+                        <p>${message}</p>
+                    </div>
+                `;
+            }
+
+            showNotification(message, type) {
+                const notification = document.createElement('div');
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    padding: 1rem 1.5rem;
+                    background: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6'};
+                    color: white;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+                    z-index: 1001;
+                    animation: slideIn 0.3s ease;
+                `;
+                notification.textContent = message;
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.style.animation = 'fadeOut 0.3s ease';
+                    setTimeout(() => {
+                        document.body.removeChild(notification);
+                    }, 300);
+                }, 3000);
+            }
+
+            logout() {
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                this.redirectToLogin();
+            }
+
+            redirectToLogin() {
+                window.location.href = 'login.html';
+            }
+
+            redirectToDashboard() {
+                const dashboardUrls = {
+                    'candidat': 'dashboard-candidat.html',
+                    'recruteur': 'dashboard-recruteur.html',
+                    'administrateur': 'dashboard-admin.html'
+                };
+                const url = dashboardUrls[this.currentUser?.role] || 'login.html';
+                window.location.href = url;
+            }
+        }
+
+        // Initialiser l'application
+        let userManager;
+        document.addEventListener('DOMContentLoaded', function() {
+            userManager = new UsersManager();
+        });
+
+        // Ajouter les animations CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+            
+            @keyframes fadeOut {
+                from {
+                    opacity: 1;
+                }
+                to {
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détails de l'Offre - RecrutDNCS</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin: 0;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .job-details {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .job-header {
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .job-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin: 0 0 1rem 0;
+        }
+
+        .job-company {
+            font-size: 1.25rem;
+            color: #6b7280;
+            margin: 0 0 0.5rem 0;
+        }
+
+        .job-meta {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .job-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #4b5563;
+        }
+
+        .job-meta-item svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .job-tags {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .job-tag {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .job-section {
+            margin-bottom: 2rem;
+        }
+
+        .job-section h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin: 0 0 1rem 0;
+        }
+
+        .job-description {
+            color: #4b5563;
+            line-height: 1.8;
+            white-space: pre-wrap;
+        }
+
+        .job-requirements {
+            color: #4b5563;
+            line-height: 1.8;
+        }
+
+        .job-requirements ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .job-requirements li {
+            position: relative;
+            padding-left: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .job-requirements li::before {
+            content: 'check_circle';
+            position: absolute;
+            left: 0;
+            color: #10b981;
+            font-family: 'Material Icons';
+        }
+
+        .job-benefits {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #f9fafb;
+            border-radius: 8px;
+        }
+
+        .benefit-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .benefit-text {
+            flex: 1;
+        }
+
+        .benefit-text h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin: 0 0 0.25rem 0;
+        }
+
+        .benefit-text p {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin: 0;
+        }
+
+        .job-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            padding: 2rem;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: #6b7280;
+        }
+
+        .error {
+            text-align: center;
+            padding: 3rem;
+            color: #ef4444;
+        }
+
+        .message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            z-index: 2000;
+            animation: slideIn 0.3s ease;
+        }
+
+        .message-success {
+            background: #10b981;
+        }
+
+        .message-error {
+            background: #ef4444;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .job-title {
+                font-size: 2rem;
+            }
+
+            .job-meta {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .job-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div>
+                <h1>Détails de l'Offre</h1>
+                <p style="color: #6b7280; margin-top: 0.5rem;">Informations complètes sur le poste</p>
+            </div>
+            <a href="jobs-list.html" class="back-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Retour aux offres
+            </a>
+        </div>
+
+        <div id="job-details-container">
+            <div class="loading">Chargement des détails de l'offre...</div>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        let currentJob = null;
+
+        // Vérifier l'authentification
+        function checkAuth() {
+            const token = localStorage.getItem('token');
+            const userStr = localStorage.getItem('user');
+            
+            if (!token || !userStr) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            try {
+                const user = JSON.parse(userStr);
+                if (user.role !== 'candidat') {
+                    const dashboards = {
+                        'recruteur': 'dashboard-recruteur.html',
+                        'administrateur': 'dashboard-admin.html'
+                    };
+                    window.location.href = dashboards[user.role] || 'login.html';
+                    return;
+                }
+            } catch (error) {
+                console.error('Erreur lors de la lecture des données utilisateur:', error);
+                logout();
+            }
+        }
+
+        // Déconnexion
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = 'login.html';
+        }
+
+        // Charger les détails de l'offre depuis la base de données
+        async function loadJobDetails() {
+            try {
+                const urlParams = new URLSearchParams(window.location.search);
+                const jobId = urlParams.get('id');
+                
+                if (!jobId) {
+                    showError('Aucune offre spécifiée');
+                    return;
+                }
+
+                const token = localStorage.getItem('token');
+                const response = await fetch(`/api/jobs/${jobId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success && data.data) {
+                        currentJob = data.data;
+                        displayJobDetails();
+                    } else {
+                        throw new Error('Données invalides');
+                    }
+                } else {
+                    throw new Error('Erreur serveur');
+                }
+            } catch (error) {
+                console.error('Erreur lors du chargement des détails:', error);
+                showError('Impossible de charger les détails de l\'offre: ' + error.message);
+            }
+        }
+
+        // Charger des détails simulés en cas d'erreur
+        function loadSimulatedJobDetails() {
+            currentJob = {
+                id: 1,
+                titre: 'Développeur Web Senior',
+                entreprise: 'TechCompany',
+                localisation: 'Paris, France',
+                type_contrat: 'CDI',
+                salaire: '45-60k par an',
+                description: `Nous recherchons un développeur web senior expérimenté pour rejoindre notre équipe dynamique. Vous serez responsable du développement et de la maintenance de nos applications web modernes.
+
+Responsabilités principales :
+- Développer des applications web réactives et performantes
+- Collaborer avec l'équipe de design pour implémenter des interfaces utilisateur exceptionnelles
+- Participer à la conception architecturale et aux décisions techniques
+- Maintenir et améliorer nos applications existantes
+- Former et encadrer les développeurs juniors
+
+Nous offrons un environnement de travail stimulant avec des opportunités de croissance professionnelles continues.`,
+                requirements: [
+                    'Minimum 5 ans d\'expérience en développement web',
+                    'Maîtrise parfaite de JavaScript, HTML5, CSS3',
+                    'Expérience avec React.js ou Angular',
+                    'Connaissance des bases de données SQL et NoSQL',
+                    'Expérience avec les méthodologies Agiles',
+                    'Excellentes compétences en communication',
+                    'Capacité à travailler en équipe',
+                    'Autonomie et proactivité'
+                ],
+                benefits: [
+                    {
+                        title: 'Salaire compétitif',
+                        description: '45-60k par an selon l\'expérience'
+                    },
+                    {
+                        title: 'Télétravail partiel',
+                        description: '2-3 jours par semaine à domicile'
+                    },
+                    {
+                        title: 'Formation continue',
+                        description: 'Budget de formation annuel'
+                    },
+                    {
+                        title: 'Assurance santé',
+                        description: 'Couverture santé complète'
+                    },
+                    {
+                        title: 'RTT',
+                        description: '25 jours de congés payés'
+                    },
+                    {
+                        title: 'Équipement',
+                        description: 'Ordinateur portable et matériel de pointe'
+                    }
+                ],
+                created_at: '2024-01-15T10:30:00Z'
+            };
+            displayJobDetails();
+        }
+
+        // Afficher les détails de l'offre
+        function displayJobDetails() {
+            const container = document.getElementById('job-details-container');
+            
+            const jobHTML = `
+                <div class="job-details">
+                    <div class="job-header">
+                        <h1 class="job-title">${currentJob.titre}</h1>
+                        <p class="job-company">${currentJob.entreprise}</p>
+                        <div class="job-meta">
+                            <div class="job-meta-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13 9-5 9-5 9-5z"/>
+                                    <circle cx="12" cy="12" r="3"/>
+                                </svg>
+                                ${currentJob.localisation}
+                            </div>
+                            <div class="job-meta-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+                                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                                </svg>
+                                ${currentJob.type_contrat}
+                            </div>
+                            <div class="job-meta-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="12" y1="1" x2="12" y2="23"></line>
+                                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 0 0-7"/>
+                                </svg>
+                                ${currentJob.salaire}
+                            </div>
+                        </div>
+                        <div class="job-tags">
+                            <span class="job-tag">Temps plein</span>
+                            <span class="job-tag">Présentiel</span>
+                            <span class="job-tag">Senior</span>
+                        </div>
+                    </div>
+
+                    <div class="job-section">
+                        <h2>Description du poste</h2>
+                        <div class="job-description">${currentJob.description}</div>
+                    </div>
+
+                    <div class="job-section">
+                        <h2>Compétences requises</h2>
+                        <div class="job-requirements">
+                            <ul>
+                                ${currentJob.requirements ? currentJob.requirements.map(req => `<li>${req}</li>`).join('') : '<li>Aucune compétence spécifiée</li>'}
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="job-section">
+                        <h2>Avantages</h2>
+                        <div class="job-benefits">
+                            ${currentJob.benefits ? currentJob.benefits.map(benefit => `
+                                <div class="benefit-item">
+                                    <div class="benefit-icon">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                            <polyline points="22,4 12,14.01 9,11.01"/>
+                                        </svg>
+                                    </div>
+                                    <div class="benefit-text">
+                                        <h3>${benefit.title}</h3>
+                                        <p>${benefit.description}</p>
+                                    </div>
+                                </div>
+                            `).join('') : '<p>Aucun avantage spécifié</p>'}
+                        </div>
+                    </div>
+
+                    <div class="job-actions">
+                        <button class="btn btn-primary" onclick="applyToJob()">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M23 7l-7 5 7 5V7z"/>
+                                <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+                            </svg>
+                            Postuler maintenant
+                        </button>
+                        <button class="btn btn-secondary" onclick="saveJob()">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+                            </svg>
+                            Sauvegarder
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            container.innerHTML = jobHTML;
+        }
+
+        // Postuler à l'offre
+        async function applyToJob() {
+            try {
+                const token = localStorage.getItem('token');
+                const user = JSON.parse(localStorage.getItem('user'));
+                
+                const response = await fetch('/api/applications', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        job_id: currentJob.id,
+                        user_id: user.id
+                    })
+                });
+
+                if (response.ok) {
+                    showMessage('Candidature envoyée avec succès !', 'success');
+                } else {
+                    showMessage('Erreur lors de l\'envoi de la candidature', 'error');
+                }
+            } catch (error) {
+                console.error('Erreur lors de la candidature:', error);
+                showMessage('Erreur lors de l\'envoi de la candidature', 'error');
+            }
+        }
+
+        // Sauvegarder l'offre
+        async function saveJob() {
+            try {
+                const token = localStorage.getItem('token');
+                const user = JSON.parse(localStorage.getItem('user'));
+                
+                const response = await fetch('/api/candidate/save-job', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        jobId: currentJob.id
+                    })
+                });
+
+                if (response.ok) {
+                    showMessage('Offre sauvegardée avec succès !', 'success');
+                } else {
+                    showMessage('Erreur lors de la sauvegarde de l\'offre', 'error');
+                }
+            } catch (error) {
+                console.error('Erreur lors de la sauvegarde:', error);
+                showMessage('Erreur lors de la sauvegarde de l\'offre', 'error');
+            }
+        }
+
+        // Afficher un message
+        function showMessage(message, type) {
+            const messageEl = document.createElement('div');
+            messageEl.className = `message message-${type}`;
+            messageEl.textContent = message;
+            
+            document.body.appendChild(messageEl);
+            
+            setTimeout(() => {
+                messageEl.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    if (document.body.contains(messageEl)) {
+                        document.body.removeChild(messageEl);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // Afficher une erreur
+        function showError(message) {
+            const container = document.getElementById('job-details-container');
+            container.innerHTML = `<div class="error">${message}</div>`;
+        }
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+            loadJobDetails();
+        });
+    </script>
+</body>
+</html>

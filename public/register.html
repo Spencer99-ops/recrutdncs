@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription - RECRUTDNCS</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        
+        .register-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 3rem 1rem;
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        .register-card {
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            width: 100%;
+            max-width: 600px;
+            overflow: visible;
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 10;
+            margin: 0 auto;
+        }
+        
+        .register-header {
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            color: white;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .register-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, transparent 100%);
+            pointer-events: none;
+        }
+        
+        .register-header h1 {
+            font-size: 2.25rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .role-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.625rem 1.25rem;
+            border-radius: 25px;
+            font-size: 0.95rem;
+            margin-top: 0.75rem;
+            font-weight: 500;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .register-body {
+            padding: 2.5rem 2rem;
+            position: relative;
+        }
+        
+        .role-description {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            border-left: 4px solid #3b82f6;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .role-description h3 {
+            color: #1e293b;
+            margin-bottom: 1.25rem;
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+        
+        .role-description ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .role-description li {
+            color: #475569;
+            margin-bottom: 0.875rem;
+            padding-left: 1.75rem;
+            position: relative;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+        
+        .role-description li:before {
+            content: "\2713";
+            position: absolute;
+            left: 0;
+            color: #3b82f6;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        .role-description li:last-child {
+            margin-bottom: 0;
+        }
+        
+        .form-group {
+            margin-bottom: 1.75rem;
+            position: relative;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+            color: #374151;
+            font-size: 0.95rem;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+            background: #ffffff;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+            transform: translateY(-1px);
+        }
+        
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: #9ca3af;
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 110px;
+        }
+        
+        .cv-upload {
+            border: 2px dashed #d1d5db;
+            border-radius: 12px;
+            padding: 2.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background: #f9fafb;
+            position: relative;
+        }
+        
+        .cv-upload:hover {
+            border-color: #3b82f6;
+            background: #f0f9ff;
+            transform: translateY(-2px);
+        }
+        
+        .cv-upload.has-file {
+            border-color: #3b82f6;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+        }
+        
+        .cv-upload svg {
+            margin-bottom: 1rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .cv-upload:hover svg {
+            transform: scale(1.1);
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .form-actions .btn {
+            flex: 1;
+            min-width: 140px;
+            padding: 0.875rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        
+        .btn {
+            padding: 0.875rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            font-size: 0.95rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+        
+        .btn-outline {
+            background: #ffffff;
+            color: #374151;
+            border: 2px solid #e5e7eb;
+        }
+        
+        .btn-outline:hover {
+            background: #f9fafb;
+            border-color: #d1d5db;
+            transform: translateY(-2px);
+        }
+        
+        .form-error {
+            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+            color: #dc2626;
+            padding: 1rem 1.25rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid #dc2626;
+            font-size: 0.9rem;
+            animation: slideIn 0.3s ease;
+        }
+        
+        .form-success {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            color: #16a34a;
+            padding: 1rem 1.25rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid #16a34a;
+            font-size: 0.9rem;
+            animation: slideIn 0.3s ease;
+        }
+        
+        .back-link {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e5e7eb;
+            animation: fadeInUp 0.8s ease-out 1s both;
+        }
+        
+        .back-link p {
+            color: #4b5563;
+            font-size: 1rem;
+            margin: 0;
+            font-weight: 500;
+        }
+        
+        .back-link a {
+            color: #3b82f6;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            margin-left: 0.25rem;
+        }
+        
+        .back-link a:hover {
+            color: #2563eb;
+            text-decoration: underline;
+            transform: translateY(-1px);
+            display: inline-block;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .loading {
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+        
+        @keyframes shimmer {
+            0% {
+                background-position: -200% 0;
+            }
+            100% {
+                background-position: 200% 0;
+            }
+        }
+        
+        .register-card {
+            animation: fadeInUp 0.6s ease-out;
+        }
+        
+        .register-header {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .register-header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+        
+        .role-description {
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+        
+        .form-group {
+            animation: fadeInUp 0.8s ease-out both;
+        }
+        
+        .form-group:nth-child(1) { animation-delay: 0.3s; }
+        .form-group:nth-child(2) { animation-delay: 0.4s; }
+        .form-group:nth-child(3) { animation-delay: 0.5s; }
+        .form-group:nth-child(4) { animation-delay: 0.6s; }
+        .form-group:nth-child(5) { animation-delay: 0.7s; }
+        .form-group:nth-child(6) { animation-delay: 0.8s; }
+        
+        .form-actions {
+            animation: fadeInUp 0.8s ease-out 0.9s both;
+        }
+        
+        .btn:hover {
+            animation: pulse 0.3s ease-in-out;
+        }
+        
+        .role-description li {
+            transition: all 0.3s ease;
+        }
+        
+        .role-description li:hover {
+            color: #1e293b;
+            transform: translateX(5px);
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus {
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1), 0 4px 12px rgba(59, 130, 246, 0.15);
+        }
+        
+        .cv-upload {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cv-upload::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .cv-upload:hover::before {
+            left: 100%;
+        }
+        
+        @media (max-width: 768px) {
+            .register-container {
+                padding: 2rem 0.5rem;
+                align-items: flex-start;
+            }
+            
+            .register-card {
+                max-width: 100%;
+                border-radius: 16px;
+                margin: 0 0.5rem;
+                overflow: visible;
+            }
+            
+            .register-header {
+                padding: 2rem 1.5rem;
+            }
+            
+            .register-header h1 {
+                font-size: 2rem;
+            }
+            
+            .register-body {
+                padding: 2rem 1.5rem;
+            }
+            
+            .form-actions {
+                gap: 0.75rem;
+                flex-direction: column;
+            }
+            
+            .form-actions .btn {
+                min-width: auto;
+            }
+            
+            .role-description {
+                padding: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .register-header {
+                padding: 1.5rem 1rem;
+            }
+            
+            .register-header h1 {
+                font-size: 1.75rem;
+            }
+            
+            .register-body {
+                padding: 1.5rem 1rem;
+            }
+            
+            .role-description {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <div class="register-card">
+            <div class="register-header">
+                <h1>Inscription Candidat</h1>
+                <div class="role-badge">Espace Candidat</div>
+            </div>
+            
+            <div class="register-body">
+                <div class="role-description" id="role-description">
+                    <h3 id="role-title">Chargement...</h3>
+                    <ul id="role-features">
+                        <!-- Les fonctionnalités seront insérées ici -->
+                    </ul>
+                </div>
+                
+                <form id="register-form">
+                    <div class="form-group">
+                        <label for="nom">Nom complet *</label>
+                        <input type="text" id="nom" name="nom" required placeholder="Entrez votre nom complet">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email professionnel *</label>
+                        <input type="email" id="email" name="email" required placeholder="exemple@entreprise.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="telephone">Téléphone</label>
+                        <input type="tel" id="telephone" name="telephone" placeholder="+33 6 12 34 56 78">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Mot de passe *</label>
+                        <input type="password" id="password" name="password" required placeholder="Minimum 8 caractères">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="confirm-password">Confirmer le mot de passe *</label>
+                        <input type="password" id="confirm-password" name="confirm-password" required placeholder="Répétez votre mot de passe">
+                    </div>
+                    
+                    <div class="form-group" id="bio-group">
+                        <label for="bio">Biographie / Description</label>
+                        <textarea id="bio" name="bio" placeholder="Décrivez votre expérience, vos compétences et vos objectifs..."></textarea>
+                    </div>
+                    
+                    <div class="form-group" id="location-group">
+                        <label for="location">Localisation</label>
+                        <input type="text" id="location" name="location" placeholder="Paris, France">
+                    </div>
+                    
+                    <div class="form-group" id="experience-group">
+                        <label for="experience">Expérience</label>
+                        <select id="experience" name="experience">
+                            <option value="">Sélectionnez votre expérience</option>
+                            <option value="0-1">0-1 an</option>
+                            <option value="1-3">1-3 ans</option>
+                            <option value="3-5">3-5 ans</option>
+                            <option value="5-10">5-10 ans</option>
+                            <option value="10+">10+ ans</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group" id="job-title-group">
+                        <label for="job_title">Poste recherché</label>
+                        <input type="text" id="job_title" name="job_title" placeholder="Ex: Développeur Web, Designer UX...">
+                    </div>
+                    
+                    <div class="form-group" id="skills-group">
+                        <label for="skills">Compétences</label>
+                        <textarea id="skills" name="skills" placeholder="Listez vos principales compétences (ex: JavaScript, React, Node.js, Design Thinking...)"></textarea>
+                    </div>
+                    
+                    <div class="form-group" id="cv-group">
+                        <label for="cv">CV (PDF uniquement)</label>
+                        <div class="cv-upload" onclick="document.getElementById('cv').click()">
+                            <input type="file" id="cv" name="cv" accept=".pdf" style="display: none;">
+                            <div id="cv-preview">
+                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                                </svg>
+                                <p style="font-weight: 600; color: #374151; margin-bottom: 0.5rem;">Cliquez pour télécharger votre CV</p>
+                                <small style="color: #6b7280;">Format PDF uniquement - Maximum 5MB</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="error-message" class="form-error" style="display: none;"></div>
+                    <div id="success-message" class="form-success" style="display: none;"></div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="8.5" cy="7" r="4"></circle>
+                                <path d="M20 8v6M23 11h-6"></path>
+                            </svg>
+                            Créer mon compte
+                        </button>
+                        <button type="button" class="btn btn-outline" onclick="window.location.href='/'">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="19" y1="12" x2="5" y2="12"></line>
+                                <polyline points="12,19 5,12 12,5"></polyline>
+                            </svg>
+                            Retour
+                        </button>
+                    </div>
+                </form>
+                
+                <div class="back-link">
+                    <p>Déjà un compte ? <a href="login.html">Se connecter</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration pour les candidats uniquement
+        const candidateConfig = {
+            title: "Espace Candidat",
+            description: "Accédez aux meilleures offres d'emploi et gérez votre carrière",
+            features: [
+                "Consultez toutes les offres d'emploi disponibles",
+                "Postulez facilement avec votre CV",
+                "Suivez l'état de vos candidatures en temps réel",
+                "Gérez votre profil professionnel",
+                "Recevez des alertes pour les nouvelles offres"
+            ],
+            showCV: true,
+            showBio: true
+        };
+
+        // Configurer la page pour les candidats
+        function setupCandidatePage() {
+            // Mettre à jour la description
+            document.getElementById('role-title').textContent = candidateConfig.description;
+            
+            // Mettre à jour les fonctionnalités
+            const featuresList = document.getElementById('role-features');
+            featuresList.innerHTML = candidateConfig.features.map(feature => `<li>${feature}</li>`).join('');
+            
+            // Afficher tous les champs spécifiques aux candidats
+            document.getElementById('cv-group').style.display = 'block';
+            document.getElementById('bio-group').style.display = 'block';
+            document.getElementById('location-group').style.display = 'block';
+            document.getElementById('experience-group').style.display = 'block';
+            document.getElementById('job-title-group').style.display = 'block';
+            document.getElementById('skills-group').style.display = 'block';
+            
+            // Ajouter le champ rôle caché
+            let roleInput = document.getElementById('role');
+            if (!roleInput) {
+                roleInput = document.createElement('input');
+                roleInput.type = 'hidden';
+                roleInput.id = 'role';
+                roleInput.name = 'role';
+                document.getElementById('register-form').appendChild(roleInput);
+            }
+            roleInput.value = 'candidat';
+        }
+
+        // Gestion de l'upload de CV
+        document.getElementById('cv').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const preview = document.getElementById('cv-preview');
+            const uploadDiv = document.querySelector('.cv-upload');
+            
+            if (file) {
+                if (file.type !== 'application/pdf') {
+                    showError('Veuillez télécharger un fichier PDF uniquement.');
+                    e.target.value = '';
+                    return;
+                }
+                
+                if (file.size > 5 * 1024 * 1024) { // 5MB
+                    showError('Le fichier ne doit pas dépasser 5MB.');
+                    e.target.value = '';
+                    return;
+                }
+                
+                preview.innerHTML = `
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                    </svg>
+                    <p style="color: #10b981; font-weight: 600; margin-bottom: 0.5rem;">${file.name}</p>
+                    <small style="color: #059669;">Fichier sélectionné avec succès</small>
+                `;
+                uploadDiv.classList.add('has-file');
+            }
+        });
+
+        // Validation en temps réel
+        function setupRealTimeValidation() {
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+            const confirmPasswordInput = document.getElementById('confirm-password');
+            const nomInput = document.getElementById('nom');
+            
+            // Validation email
+            emailInput.addEventListener('blur', function() {
+                const email = this.value;
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                
+                if (email && !emailRegex.test(email)) {
+                    showFieldError(this, 'Veuillez entrer une adresse email valide');
+                } else {
+                    clearFieldError(this);
+                }
+            });
+            
+            // Validation nom
+            nomInput.addEventListener('blur', function() {
+                const nom = this.value.trim();
+                if (nom && nom.length < 2) {
+                    showFieldError(this, 'Le nom doit contenir au moins 2 caractères');
+                } else {
+                    clearFieldError(this);
+                }
+            });
+            
+            // Validation mot de passe
+            passwordInput.addEventListener('blur', function() {
+                const password = this.value;
+                if (password && password.length < 6) {
+                    showFieldError(this, 'Le mot de passe doit contenir au moins 6 caractères');
+                } else {
+                    clearFieldError(this);
+                }
+            });
+            
+            // Validation confirmation mot de passe
+            confirmPasswordInput.addEventListener('blur', function() {
+                const password = passwordInput.value;
+                const confirmPassword = this.value;
+                
+                if (confirmPassword && password !== confirmPassword) {
+                    showFieldError(this, 'Les mots de passe ne correspondent pas');
+                } else {
+                    clearFieldError(this);
+                }
+            });
+        }
+        
+        function showFieldError(input, message) {
+            clearFieldError(input);
+            
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'field-error';
+            errorDiv.textContent = message;
+            errorDiv.style.cssText = `
+                color: #dc2626;
+                font-size: 0.875rem;
+                margin-top: 0.5rem;
+                padding: 0.5rem;
+                background: #fef2f2;
+                border: 1px solid #fecaca;
+                border-radius: 6px;
+                animation: slideIn 0.3s ease;
+            `;
+            
+            input.style.borderColor = '#dc2626';
+            input.style.boxShadow = '0 0 0 3px rgba(220, 38, 38, 0.1)';
+            input.parentNode.appendChild(errorDiv);
+        }
+        
+        function clearFieldError(input) {
+            input.style.borderColor = '#e5e7eb';
+            input.style.boxShadow = 'none';
+            const existingError = input.parentNode.querySelector('.field-error');
+            if (existingError) {
+                existingError.style.animation = 'fadeOut 0.3s ease';
+                setTimeout(() => existingError.remove(), 300);
+            }
+        }
+        
+        // Gestion du formulaire
+        document.getElementById('register-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            hideMessages();
+            
+            // Validation complète avant envoi
+            const nom = document.getElementById('nom').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            
+            if (!nom || nom.length < 2) {
+                showError('Le nom doit contenir au moins 2 caractères');
+                return;
+            }
+            
+            if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                showError('Veuillez entrer une adresse email valide');
+                return;
+            }
+            
+            if (!password || password.length < 6) {
+                showError('Le mot de passe doit contenir au moins 6 caractères');
+                return;
+            }
+            
+            // Validation confirmation mot de passe
+            if (!confirmPassword) {
+                showError('Veuillez confirmer votre mot de passe');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                showError('Les mots de passe ne correspondent pas');
+                return;
+            }
+            
+            // Désactiver le bouton pendant l'envoi
+            const submitBtn = document.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 12a9 9 0 11-6.219-8.56"/>
+                </svg>
+                Création en cours...
+            `;
+            
+            const formData = new FormData();
+            formData.append('nom', nom);
+            formData.append('email', email);
+            formData.append('password', password);
+            formData.append('telephone', document.getElementById('telephone').value);
+            formData.append('role', document.getElementById('role').value);
+            
+            const bio = document.getElementById('bio').value;
+            if (bio) {
+                formData.append('bio', bio);
+            }
+            
+            const cvFile = document.getElementById('cv').files[0];
+            if (cvFile) {
+                formData.append('cv', cvFile);
+            }
+            
+            try {
+                const response = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showSuccess('Compte créé avec succès ! Redirection vers la page de connexion...');
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 2000);
+                } else {
+                    showError(data.message || 'Erreur lors de la création du compte.');
+                }
+            } catch (error) {
+                showError('Erreur de connexion au serveur. Veuillez réessayer.');
+            } finally {
+                // Réactiver le bouton
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+            }
+        });
+
+        // Fonctions utilitaires
+        function showError(message) {
+            const errorDiv = document.getElementById('error-message');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            
+            // Vider le formulaire en cas d'erreur
+            resetForm();
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.getElementById('success-message');
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+        }
+
+        function hideMessages() {
+            document.getElementById('error-message').style.display = 'none';
+            document.getElementById('success-message').style.display = 'none';
+        }
+
+        function resetForm() {
+            document.getElementById('register-form').reset();
+            // Vider manuellement les champs qui pourraient ne pas être réinitialisés
+            document.getElementById('nom').value = '';
+            document.getElementById('email').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('confirm-password').value = '';
+            document.getElementById('telephone').value = '';
+            document.getElementById('bio').value = '';
+            document.getElementById('cv').value = '';
+            
+            // Réinitialiser le rôle caché
+            const roleInput = document.getElementById('role');
+            if (roleInput) {
+                roleInput.value = 'candidat';
+            }
+        }
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            setupCandidatePage();
+            setupRealTimeValidation();
+        });
+    </script>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth-api.js"></script>
+</body></body>
+</html>
