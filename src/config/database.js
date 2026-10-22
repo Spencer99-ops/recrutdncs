@@ -1,29 +1,24 @@
-const mysql = require('mysql2/promise');
+const { Pool } = require('pg');
 require('dotenv').config();
 
-const dbConfig = {
-  host: process.env.DB_HOST || 'localhost',
-  user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || '',
-  database: process.env.DB_NAME || 'recrutdncs',
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0
-};
-
-const pool = mysql.createPool(dbConfig);
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL || `postgresql://${process.env.DB_USER || 'postgres'}:${process.env.DB_PASSWORD || ''}@${process.env.DB_HOST || 'localhost'}:5432/${process.env.DB_NAME || 'recrutdncs'}`,
+  max: 10,
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 2000,
+});
 
 module.exports = {
   pool,
   async query(sql, params) {
-    const [rows] = await pool.execute(sql, params);
-    return rows;
+    const result = await pool.query(sql, params);
+    return result.rows;
   },
   async getConnection() {
-    return await pool.getConnection();
+    return await pool.connect();
   },
   async getUserById(userId) {
-    const [rows] = await pool.execute('SELECT id, email, nom, telephone, role, adresse, ville, bio, created_at, updated_at FROM users WHERE id = ?', [userId]);
-    return rows[0] || null;
+    const result = await pool.query('SELECT id, email, nom, telephone, role, adresse, ville, bio, created_at, updated_at FROM users WHERE id = $1', [userId]);
+    return result.rows[0] || null;
   }
 };

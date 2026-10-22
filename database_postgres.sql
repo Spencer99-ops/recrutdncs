@@ -1,0 +1,233 @@
+-- Création de la base de données pour RECRUTDNCS (PostgreSQL)
+-- PostgreSQL version - conversion from MySQL
+
+-- Création des types ENUM personnalisés
+CREATE TYPE user_role AS ENUM ('candidat', 'recruteur', 'administrateur');
+CREATE TYPE contract_type AS ENUM ('CDI', 'CDD', 'Stage', 'Alternance', 'Freelance', 'Temps partiel');
+CREATE TYPE job_status AS ENUM ('active', 'inactive', 'draft', 'closed');
+CREATE TYPE application_status AS ENUM ('en_attente', 'en_revue', 'entretien', 'accepte', 'refuse');
+CREATE TYPE document_type AS ENUM ('cv', 'cover_letter', 'avatar');
+CREATE TYPE notification_type AS ENUM ('application_status', 'new_job_match', 'interview_scheduled', 'system');
+
+-- Table des utilisateurs (élargie pour tous les profils)
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    nom VARCHAR(100) NOT NULL,
+    prenom VARCHAR(100),
+    telephone VARCHAR(20),
+    role user_role NOT NULL DEFAULT 'candidat',
+    bio TEXT,
+    -- Champs spécifiques aux candidats
+    location VARCHAR(255),
+    experience VARCHAR(20),
+    job_title VARCHAR(200),
+    skills TEXT,
+    avatar_path VARCHAR(255),
+    cv_path VARCHAR(255),
+    cover_letter_path VARCHAR(255),
+    -- Champs spécifiques aux recruteurs
+    company_name VARCHAR(100),
+    company_sector VARCHAR(100),
+    company_size VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Fonction pour mettre à jour updated_at automatiquement
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = CURRENT_TIMESTAMP;
+    RETURN NEW;
+END;
+$$ language 'plpgsql';
+
+-- Trigger pour updated_at sur users
+CREATE TRIGGER update_users_updated_at BEFORE UPDATE ON users
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- Table des offres d'emploi (élargie)
+CREATE TABLE jobs (
+    id SERIAL PRIMARY KEY,
+    titre VARCHAR(200) NOT NULL,
+    description TEXT NOT NULL,
+    requirements TEXT,
+    benefits TEXT,
+    entreprise VARCHAR(100) NOT NULL,
+    location VARCHAR(100) NOT NULL,
+    type_contrat contract_type NOT NULL,
+    salaire_min DECIMAL(10,2),
+    salaire_max DECIMAL(10,2),
+    remote BOOLEAN DEFAULT FALSE,
+    user_id INTEGER NOT NULL,
+    status job_status DEFAULT 'active',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- Trigger pour updated_at sur jobs
+CREATE TRIGGER update_jobs_updated_at BEFORE UPDATE ON jobs
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- Table des candidatures (élargie)
+CREATE TABLE applications (
+    id SERIAL PRIMARY KEY,
+    job_id INTEGER NOT NULL,
+    user_id INTEGER NOT NULL,
+    cv_path VARCHAR(255),
+    cover_letter_path VARCHAR(255),
+    message_motivation TEXT,
+    statut application_status NOT NULL DEFAULT 'en_attente',
+    interview_date TIMESTAMP,
+    feedback TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (job_id) REFERENCES jobs(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    CONSTRAINT unique_application UNIQUE (job_id, user_id)
+);
+
+-- Trigger pour updated_at sur applications
+CREATE TRIGGER update_applications_updated_at BEFORE UPDATE ON applications
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- Table des documents (pour gestion centralisée)
+CREATE TABLE documents (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    type document_type NOT NULL,
+    file_name VARCHAR(255) NOT NULL,
+    file_path VARCHAR(500) NOT NULL,
+    file_size INTEGER,
+    mime_type VARCHAR(100),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- Trigger pour updated_at sur documents
+CREATE TRIGGER update_documents_updated_at BEFORE UPDATE ON documents
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- Table des notifications
+CREATE TABLE notifications (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    type notification_type NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    message TEXT NOT NULL,
+    is_read BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- Table des statistiques (pour le dashboard admin)
+CREATE TABLE statistics (
+    id SERIAL PRIMARY KEY,
+    metric_name VARCHAR(100) NOT NULL,
+    metric_value INTEGER NOT NULL,
+    metric_date DATE NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Index pour optimiser les performances
+CREATE INDEX idx_jobs_user_id ON jobs(user_id);
+CREATE INDEX idx_jobs_status ON jobs(status);
+CREATE INDEX idx_jobs_location ON jobs(location);
+CREATE INDEX idx_jobs_created_at ON jobs(created_at);
+CREATE INDEX idx_applications_job_id ON applications(job_id);
+CREATE INDEX idx_applications_user_id ON applications(user_id);
+CREATE INDEX idx_applications_statut ON applications(statut);
+CREATE INDEX idx_applications_created_at ON applications(created_at);
+CREATE INDEX idx_documents_user_id ON documents(user_id);
+CREATE INDEX idx_documents_type ON documents(type);
+CREATE INDEX idx_notifications_user_id ON notifications(user_id);
+CREATE INDEX idx_notifications_read ON notifications(is_read);
+CREATE INDEX idx_users_email ON users(email);
+CREATE INDEX idx_users_role ON users(role);
+CREATE INDEX idx_users_created_at ON users(created_at);
+
+-- Insertion d'un administrateur par défaut (mot de passe: admin123)
+INSERT INTO users (email, password, nom, prenom, role, bio)
+VALUES ('admin@recrutdncs.com', '$2b$10$rOzJqQjQjQjQjQjQjQjOzJqQjQjQjQjQjQjQjQjQjQjQjQjQjQjQ', 'Administrateur', 'Admin', 'administrateur', 'Administrateur principal de la plateforme RECRUTDNCS');
+
+-- Insertion d'un recruteur de test
+INSERT INTO users (email, password, nom, prenom, telephone, role, bio, company_name, company_sector, company_size)
+VALUES ('recruteur@techcompany.com', '$2b$10$rOzJqQjQjQjQjQjQjQjOzJqQjQjQjQjQjQjQjQjQjQjQjQjQjQjQjQ', 'Tech Company', 'Recruteur', '+33 1 23 45 67 89', 'recruteur',
+'Entreprise spécialisée dans le développement web et les technologies digitales.',
+'Tech Company SAS', 'Informatique', '50-100');
+
+-- Insertion de candidats de test
+INSERT INTO users (email, password, nom, prenom, telephone, role, bio, location, experience, job_title, skills)
+VALUES
+('jean.dupont@email.com', '$2b$10$rOzJqQjQjQjQjQjQjQjOzJqQjQjQjQjQjQjQjQjQjQjQjQjQjQjQjQ', 'Dupont', 'Jean', '+33 6 12 34 56 78', 'candidat',
+'Développeur web passionné avec 5 ans d''expérience en React et Node.js. Je recherche activement de nouveaux défis techniques dans une entreprise innovante.',
+'Paris', '3-5', 'Développeur Full Stack',
+'React, JavaScript, TypeScript, Node.js, Express, MongoDB, PostgreSQL, Git, Docker, AWS, CI/CD'),
+
+('marie.martin@email.com', '$2b$10$rOzJqQjQjQjQjQjQjQjOzJqQjQjQjQjQjQjQjQjQjQjQjQjQjQjQjQjQ', 'Martin', 'Marie', '+33 7 98 76 54 32', 'candidat',
+'Designer UX/UX créative avec 3 ans d''expérience. Spécialisée en design thinking et prototypage rapide.',
+'Lyon', '1-3', 'UX Designer',
+'Figma, Adobe XD, Sketch, Design Thinking, Prototypage, User Research, Wireframing, CSS, HTML basique'),
+
+('pierre.bernard@email.com', '$2b$10$rOzJqQjQjQjQjQjQjQjOzJqQjQjQjQjQjQjQjQjQjQjQjQjQjQjQjQjQ', 'Bernard', 'Pierre', '+33 6 55 44 33 22', 'candidat',
+'Étudiant en informatique à la recherche d''un stage pour développer mes compétences en développement web.',
+'Marseille', '0-1', 'Étudiant Développeur',
+'HTML, CSS, JavaScript, React, Git, Méthodes agiles, Communication, Travail d''équipe');
+
+-- Insertion d'offres d'emploi par le recruteur
+INSERT INTO jobs (titre, description, requirements, benefits, entreprise, location, type_contrat, salaire_min, salaire_max, remote, user_id, status) VALUES
+('Développeur Frontend Senior',
+'Nous recherchons un développeur frontend senior pour rejoindre notre équipe R&D. Vous travaillerez sur des projets innovants pour nos clients Fortune 500.',
+'React expert, TypeScript, 5+ ans d''expérience, Node.js, Git, CI/CD, Tests unitaires, Performance web',
+'Télétravail 3 jours/semaine, Mutuelle santé, RTT, Formation continue, Tickets restaurant',
+'Tech Company', 'Paris', 'CDI', 45000.00, 65000.00, TRUE, 2, 'active'),
+
+('Développeur Full Stack',
+'Poste polyvalent pour développer nos applications web full stack. Vous travaillerez sur toute la stack technique du frontend au backend.',
+'JavaScript/TypeScript, React, Node.js, Express, MongoDB/PostgreSQL, 3+ ans d''expérience, Docker, AWS',
+'Flexibilité horaires, Remote possible, Prime de panier-repas, Assurance complémentaire',
+'Tech Company', 'Lyon', 'CDI', 40000.00, 55000.00, TRUE, 2, 'active'),
+
+('Designer UI/UX Junior',
+'Opportunité parfaite pour les designers juniors de développer leurs compétences sur des projets réels.',
+'Figma, Adobe XD, Design Thinking, Créativité, 1+ an d''expérience, Portfolio',
+'Formation continue, Mentorat par designer senior, Équipement de qualité, Ambiance créative',
+'Tech Company', 'Marseille', 'CDD', 35000.00, 42000.00, FALSE, 2, 'active');
+
+-- Insertion de candidatures
+INSERT INTO applications (job_id, user_id, cv_path, cover_letter_path, message_motivation, statut) VALUES
+(1, 3, '/uploads/cv/jean_dupont_cv.pdf', '/uploads/cover_letters/jean_dupont_lm.pdf',
+'Je suis très intéressé par votre offre de développeur frontend senior. Mon expérience en React et TypeScript correspond parfaitement à vos besoins.', 'en_attente'),
+
+(2, 4, '/uploads/cv/marie_martin_cv.pdf', '/uploads/cover_letters/marie_martin_lm.pdf',
+'Votre offre de développeur full stack m''attire car elle me permettrait d''utiliser toutes mes compétences techniques.', 'en_revue'),
+
+(3, 5, '/uploads/cv/pierre_bernard_cv.pdf', '/uploads/cover_letters/pierre_bernard_lm.pdf',
+'En tant qu''étudiant passionné, je serais ravi d''apprendre et de contribuer à vos projets UI/UX.', 'entretien');
+
+-- Insertion de documents pour les candidats
+INSERT INTO documents (user_id, type, file_name, file_path, file_size, mime_type) VALUES
+(3, 'cv', 'jean_dupont_cv.pdf', '/uploads/cv/jean_dupont_cv.pdf', 245760, 'application/pdf'),
+(3, 'cover_letter', 'jean_dupont_lm.pdf', '/uploads/cover_letters/jean_dupont_lm.pdf', 125890, 'application/pdf'),
+(4, 'cv', 'marie_martin_cv.pdf', '/uploads/cv/marie_martin_cv.pdf', 189450, 'application/pdf'),
+(4, 'cover_letter', 'marie_martin_lm.pdf', '/uploads/cover_letters/marie_martin_lm.pdf', 98760, 'application/pdf'),
+(5, 'cv', 'pierre_bernard_cv.pdf', '/uploads/cv/pierre_bernard_cv.pdf', 156780, 'application/pdf');
+
+-- Insertion de notifications
+INSERT INTO notifications (user_id, type, title, message) VALUES
+(3, 'application_status', 'Candidature en attente', 'Votre candidature pour "Développeur Frontend Senior" est en cours de révision.'),
+(4, 'new_job_match', 'Nouvelle offre correspondante', 'Nouvelle offre "Développeur Full Stack" correspond à votre profil.'),
+(5, 'interview_scheduled', 'Entretien planifié', 'Un entretien est prévu pour votre candidature "Designer UI/UX Junior".');
+
+-- Insertion de statistiques pour le dashboard admin
+INSERT INTO statistics (metric_name, metric_value, metric_date) VALUES
+('total_users', 6, CURRENT_DATE),
+('total_jobs', 3, CURRENT_DATE),
+('total_applications', 3, CURRENT_DATE),
+('active_jobs', 3, CURRENT_DATE),
+('pending_applications', 1, CURRENT_DATE),
+('interviews_scheduled', 1, CURRENT_DATE);

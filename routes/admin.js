@@ -328,7 +328,7 @@ router.delete('/applications/:id', async (req, res) => {
             });
         }
 
-        const deleted = await db.query('DELETE FROM applications WHERE id = ?', [applicationId]);
+        const deleted = await db.query('DELETE FROM applications WHERE id = $1', [applicationId]);
         
         if (deleted.affectedRows === 0) {
             return res.status(500).json({

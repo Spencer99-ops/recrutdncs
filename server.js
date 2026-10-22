@@ -552,11 +552,11 @@ app.put('/api/profile/:id', async (req, res) => {
         // Si c'est un candidat, mettre à jour les compétences
         if (skills && Array.isArray(skills)) {
             // Supprimer les anciennes compétences
-            await db.query('DELETE FROM user_skills WHERE user_id = ?', [userId]);
+            await db.query('DELETE FROM user_skills WHERE user_id = $1', [userId]);
             
             // Insérer les nouvelles compétences
             for (const skill of skills) {
-                await db.query('INSERT INTO user_skills (user_id, skill_name) VALUES (?, ?)', [userId, skill]);
+                await db.query('INSERT INTO user_skills (user_id, skill_name) VALUES ($1, $2)', [userId, skill]);
             }
         }
         
@@ -992,7 +992,7 @@ app.delete('/api/applications/:id', async (req, res) => {
         const userId = decoded.id || decoded.userId;
         
         // Récupérer la candidature
-        const applications = await db.query('SELECT * FROM applications WHERE id = ?', [applicationId]);
+        const applications = await db.query('SELECT * FROM applications WHERE id = $1', [applicationId]);
         
         if (applications.length === 0) {
             return res.status(404).json({ success: false, message: 'Candidature non trouvée' });
@@ -1013,7 +1013,7 @@ app.delete('/api/applications/:id', async (req, res) => {
         }
         
         // Supprimer la candidature
-        await db.query('DELETE FROM applications WHERE id = ?', [applicationId]);
+        await db.query('DELETE FROM applications WHERE id = $1', [applicationId]);
         
         res.json({
             success: true,
@@ -1207,10 +1207,10 @@ app.delete('/api/jobs/:jobId', async (req, res) => {
         const jobId = req.params.jobId;
 
         // Supprimer d'abord les candidatures associées
-        await db.query('DELETE FROM applications WHERE job_id = ?', [jobId]);
+        await db.query('DELETE FROM applications WHERE job_id = $1', [jobId]);
         
         // Puis supprimer l'offre
-        await db.query('DELETE FROM jobs WHERE id = ?', [jobId]);
+        await db.query('DELETE FROM jobs WHERE id = $1', [jobId]);
 
         res.json({
             success: true,

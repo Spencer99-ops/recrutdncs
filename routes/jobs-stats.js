@@ -179,7 +179,7 @@ router.get('/applications/job/:jobId', authenticateToken, requireRole('recruteur
         const userId = req.user.id;
         
         // Vérifier que l'offre appartient bien au recruteur
-        const job = await db.query('SELECT id, titre FROM jobs WHERE id = ? AND user_id = ?', [jobId, userId]);
+        const job = await db.query('SELECT id, titre FROM jobs WHERE id = $1 AND user_id = $2', [jobId, userId]);
         
         if (job.length === 0) {
             return res.status(404).json({
