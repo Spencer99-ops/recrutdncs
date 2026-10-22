@@ -1,188 +1,95 @@
-# RECRUTDNCS - Système de Gestion des Recrutements (ATS)
+# RECRUTDNCS - Système de Gestion des Recrutements
 
-API REST complète pour la gestion du processus de recrutement avec Node.js, Express.js et MySQL.
+Application de recrutement en ligne avec API Neon Functions et frontend statique.
 
-## Fonctionnalités
+## 🚀 Déploiement
 
-- **Gestion des utilisateurs** avec 3 rôles : Candidat, Recruteur, Administrateur
-- **Authentification JWT** sécurisée avec hachage des mots de passe
-- **Gestion des offres d'emploi** (CRUD complet)
-- **Système de candidatures** avec upload de CV (PDF)
-- **Tableau de bord administrateur** avec statistiques
-- **Validation des données** avec Joi
-- **Sécurité renforcée** avec Helmet et CORS
+### API (Backend)
+**URL de production:** https://br-raspy-base-b4dx6n7v-api.compute.c-6.us-east-2.aws.neon.tech/
 
-## Architecture Technique
+L'API est hébergée sur Neon Functions avec PostgreSQL.
 
-- **Backend** : Node.js / Express.js
-- **Base de données** : MySQL
-- **Authentification** : JWT (JSON Web Token)
-- **Sécurité** : Bcrypt (hachage), Joi (validation)
-- **Upload de fichiers** : Multer (PDF uniquement)
+### Frontend
 
-## Installation
+#### Option 1: Vercel (Recommandé)
 
-1. Cloner le projet :
-```bash
-git clone <repository-url>
-cd recrutdncs
-```
+1. Allez sur [vercel.com](https://vercel.com) et connectez-vous avec votre compte GitHub
+2. Cliquez sur "Add New Project"
+3. Sélectionnez le repository `Spencer99-ops/recrutdncs`
+4. Configurez:
+   - **Framework Preset**: Other
+   - **Root Directory**: `./`
+   - **Public Directory**: `public`
+5. Cliquez sur "Deploy"
 
-2. Installer les dépendances :
-```bash
-npm install
-```
+Le frontend sera disponible en quelques secondes.
 
-3. Configurer la base de données :
-```bash
-# Importer le fichier database.sql dans MySQL via HeidiSQL
-# Ou exécuter : mysql -u root -p < database.sql
-```
+#### Option 2: Netlify
 
-4. Configurer les variables d'environnement :
-```bash
-# Copier .env et modifier selon votre configuration
-cp .env.example .env
-```
+1. Allez sur [netlify.com](https://netlify.com)
+2. Connectez-vous avec GitHub
+3. Cliquez sur "Add new site" > "Import an existing project"
+4. Sélectionnez `Spencer99-ops/recrutdncs`
+5. Configurez:
+   - **Build command**: (laisser vide)
+   - **Publish directory**: `public`
+6. Cliquez sur "Deploy site"
 
-5. Démarrer le serveur :
-```bash
-# Mode développement
-npm run dev
-
-# Mode production
-npm start
-```
-
-## Configuration de la base de données
-
-Le fichier `database.sql` contient :
-- La structure complète des tables
-- Les index pour optimiser les performances
-- Un compte administrateur par défaut (email: admin@recrutdncs.com, mot de passe: admin123)
-- Des données de test pour démarrer rapidement
-
-## Endpoints API
-
-### Authentification
-- `POST /api/auth/register` - Inscription
-- `POST /api/auth/login` - Connexion
-- `GET /api/auth/profile/me` - Obtenir son profil
-- `PUT /api/auth/profile/me` - Mettre à jour son profil
-
-### Offres d'emploi
-- `GET /api/jobs` - Lister toutes les offres (publique)
-- `GET /api/jobs/:id` - Détails d'une offre
-- `POST /api/jobs` - Créer une offre (Recruteur/Admin)
-- `PUT /api/jobs/:id` - Modifier une offre (Recruteur/Admin)
-- `DELETE /api/jobs/:id` - Supprimer une offre (Recruteur/Admin)
-- `GET /api/jobs/my/jobs` - Mes offres (Recruteur/Admin)
-
-### Candidatures
-- `POST /api/applications/apply/:jobId` - Postuler à une offre (Candidat)
-- `GET /api/applications` - Lister les candidatures (selon le rôle)
-- `GET /api/applications/:id` - Détails d'une candidature
-- `PATCH /api/applications/:id/status` - Changer le statut (Recruteur/Admin)
-
-### Administration
-- `GET /api/admin/users` - Lister tous les utilisateurs (Admin)
-- `DELETE /api/admin/users/:id` - Supprimer un utilisateur (Admin)
-- `GET /api/admin/dashboard/stats` - Statistiques du tableau de bord (Admin)
-
-## Rôles et Permissions
-
-### Candidat
-- Consulter les offres d'emploi
-- Gérer son profil
-- Postuler aux offres (avec CV PDF)
-- Voir ses candidatures
-
-### Recruteur
-- Toutes les permissions du candidat
-- Créer/modifier/supprimer ses offres
-- Voir les candidatures pour ses offres
-- Modifier le statut des candidatures
+## 🔑 Comptes de test
 
 ### Administrateur
-- Accès total à toutes les fonctionnalités
-- Gérer tous les utilisateurs
-- Accéder aux statistiques globales
-- Modérer le contenu
+- Email: admin@recrutdncs.com
+- Mot de passe: admin123
 
-## Validation et Sécurité
+### Recruteur
+- Email: recruteur@techcompany.com
+- Mot de passe: admin123
 
-- **Validation des entrées** avec Joi
-- **Hachage des mots de passe** avec Bcrypt
-- **Tokens JWT** avec expiration configurable
-- **Upload sécurisé** (PDF uniquement, taille limitée)
-- **Protection CORS** et **Helmet** pour la sécurité HTTP
+### Candidats
+- jean.dupont@email.com / admin123
+- marie.martin@email.com / admin123
+- pierre.bernard@email.com / admin123
 
-## Structure du projet
+## 📡 API Endpoints
 
+### Authentification
+- `POST /api/auth/login` - Connexion
+- `POST /api/auth/verify` - Vérifier token
+
+### Offres d'emploi
+- `GET /api/jobs` - Liste des offres
+- `GET /api/jobs/:id` - Détails d'une offre
+
+### Utilisateurs
+- `GET /api/users/:id` - Info utilisateur
+- `GET /api/profile/:id` - Profil utilisateur
+
+### Candidatures
+- `GET /api/applications` - Liste des candidatures (nécessite auth)
+
+## 🔧 Configuration
+
+L'URL de l'API doit être configurée dans les fichiers JavaScript du frontend:
+
+Dans `public/js/config.js` (à créer):
+```javascript
+const API_URL = 'https://br-raspy-base-b4dx6n7v-api.compute.c-6.us-east-2.aws.neon.tech/';
 ```
-recrutdncs/
-|-- src/
-|   |-- controllers/     # Logique métier
-|   |-- models/         # Modèles de base de données
-|   |-- routes/         # Définition des routes
-|   |-- middleware/     # Middleware (auth, validation, upload)
-|   |-- config/         # Configuration base de données
-|   |-- utils/          # Utilitaires
-|   |-- app.js          # Configuration Express
-|-- uploads/            # Fichiers uploadés (CV)
-|-- database.sql        # Structure et données initiales
-|-- .env                # Variables d'environnement
-|-- index.js            # Point d'entrée
-|-- package.json
-```
 
-## Exemples d'utilisation
+## 📚 Technologies
 
-### Inscription d'un candidat
+- **Backend**: Node.js, Hono, PostgreSQL
+- **Hosting**: Neon Functions (API)
+- **Frontend**: HTML, CSS, JavaScript
+- **Database**: PostgreSQL sur Neon
+
+## 📝 Développement local
+
+### API
 ```bash
-curl -X POST http://localhost:3000/api/auth/register \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "candidat@example.com",
-    "password": "password123",
-    "nom": "Jean Dupont",
-    "telephone": "0612345678",
-    "role": "candidat"
-  }'
+npm install
+node server.js
 ```
 
-### Connexion
-```bash
-curl -X POST http://localhost:3000/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "candidat@example.com",
-    "password": "password123"
-  }'
-```
-
-### Créer une offre (avec token)
-```bash
-curl -X POST http://localhost:3000/api/jobs \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer <votre_token>" \
-  -d '{
-    "titre": "Développeur Full Stack",
-    "description": "Description détaillée du poste...",
-    "entreprise": "Tech Company",
-    "ville": "Paris",
-    "type_contrat": "CDI",
-    "salaire": "45k-65k"
-  }'
-```
-
-## Développement
-
-- Le serveur de développement démarre sur `http://localhost:3000`
-- Les fichiers uploadés sont stockés dans le dossier `uploads/`
-- Utilisez `npm run dev` pour le développement avec redémarrage automatique
-- La base de données doit être configurée avant de démarrer le serveur
-
-## Support
-
-Pour toute question ou problème, veuillez consulter la documentation ou créer une issue dans le dépôt du projet.
+### Frontend
+Ouvrez simplement `public/index.html` dans votre navigateur.
