@@ -7,7 +7,7 @@ try {
     require('express');
     require('mysql2');
     require('jsonwebtoken');
-    require('bcrypt');
+    require('bcryptjs');
     require('joi');
     require('multer');
     console.log('Toutes les dépendances sont installées');

@@ -136,3 +136,4 @@ simple-*.js
 quick-*.js
 real-data.sql
 test-data.sql
+.neon

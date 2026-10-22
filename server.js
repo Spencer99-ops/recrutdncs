@@ -24,6 +24,9 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Exporter l'application pour Neon Functions
+module.exports = app;
+
 // Configuration de Multer pour les uploads
 const upload = multer({
     dest: process.env.UPLOAD_PATH || './uploads',
@@ -1364,15 +1367,15 @@ app.use((err, req, res, next) => {
     });
 });
 
-// Démarrer le serveur
-app.listen(PORT, () => {
-    console.log(`\n=== RECRUTDNCS API Server ===`);
-    console.log(`Port: ${PORT}`);
-    console.log(`Environnement: ${process.env.NODE_ENV || 'development'}`);
-    console.log(`URL: http://localhost:${PORT}`);
-    console.log(`API: http://localhost:${PORT}/api`);
-    console.log(`===============================\n`);
-});
-
-
-module.exports = app;
+// Neon Functions gère le démarrage du serveur automatiquement
+// Ne pas démarrer le serveur localement
+if (require.main === module) {
+    app.listen(PORT, () => {
+        console.log(`\n=== RECRUTDNCS API Server ===`);
+        console.log(`Port: ${PORT}`);
+        console.log(`Environnement: ${process.env.NODE_ENV || 'development'}`);
+        console.log(`URL: http://localhost:${PORT}`);
+        console.log(`API: http://localhost:${PORT}/api`);
+        console.log(`===============================\n`);
+    });
+}
